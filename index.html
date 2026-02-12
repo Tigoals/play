@@ -14,20 +14,30 @@ background:#020617;
 color:#fff;
 }
 
-/* ===== APP LAYOUT ===== */
-.app{
-display:flex;
-flex-direction:column;
-height:100vh;
-overflow:hidden;
+/* ===== LAYOUT ===== */
+.container{
+max-width:1400px;
+margin:auto;
+padding:12px;
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:18px;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+.container{grid-template-columns:1fr}
 }
 
 /* ===== VIDEO AREA ===== */
-.video-area{
+.video-wrapper{
 position:relative;
 width:100%;
 aspect-ratio:16/9;
 background:#000;
+border-radius:12px;
+overflow:hidden;
+transition:.3s;
 }
 
 iframe{
@@ -36,29 +46,40 @@ height:100%;
 border:none;
 }
 
+/* MINI PLAYER MODE */
+.video-wrapper.mini{
+position:fixed;
+width:320px;
+height:180px;
+bottom:20px;
+right:20px;
+z-index:9999;
+border-radius:12px;
+box-shadow:0 8px 30px rgba(0,0,0,.6);
+}
+
 /* ===== LOADER ===== */
 .loader{
 position:absolute;
 top:50%;
 left:50%;
-width:55px;
-height:55px;
+width:50px;
+height:50px;
 border:5px solid #38bdf8;
 border-top-color:transparent;
 border-radius:50%;
 animation:spin 1s linear infinite;
 transform:translate(-50%,-50%);
-z-index:3;
+z-index:2;
 }
 
 .loader-text{
 position:absolute;
-top:calc(50% + 45px);
+top:calc(50% + 40px);
 left:50%;
 transform:translateX(-50%);
 font-size:14px;
 color:#38bdf8;
-z-index:3;
 }
 
 .hidden{display:none}
@@ -67,18 +88,11 @@ z-index:3;
 to{transform:translate(-50%,-50%) rotate(360deg)}
 }
 
-/* ===== CARD SECTION ===== */
-.content{
-flex:1;
-overflow-y:auto;
-padding:14px;
-}
-
-/* ===== CARD VIDIO STYLE ===== */
+/* ===== CARD ===== */
 .card{
 background:#0f172a;
-border-radius:14px;
 padding:16px;
+border-radius:14px;
 margin-bottom:14px;
 box-shadow:0 4px 14px rgba(0,0,0,.4);
 }
@@ -94,11 +108,11 @@ font-size:13px;
 opacity:.7;
 }
 
-/* MOBILE */
-@media(max-width:600px){
-.video-area{
-aspect-ratio:16/9;
-}
+/* DESKTOP SIDEBAR */
+.sidebar{
+position:sticky;
+top:12px;
+height:fit-content;
 }
 
 </style>
@@ -106,29 +120,40 @@ aspect-ratio:16/9;
 
 <body>
 
-<div class="app">
+<div class="container">
 
-<div class="video-area">
+<div>
+
+<div id="videoBox" class="video-wrapper">
 <div id="loader" class="loader"></div>
 <div id="loader-text" class="loader-text">Memuat Streaming...</div>
 <iframe id="view" allowfullscreen></iframe>
 </div>
 
-<div class="content">
-
 <div class="card">
 <h3>Info Pertandingan</h3>
-<p>Area card kosong bisa isi jadwal, deskripsi, atau statistik.</p>
+<p>Deskripsi pertandingan atau statistik.</p>
 </div>
+
+<div class="card">
+<h3>Highlight</h3>
+<p>Konten tambahan di bawah video.</p>
+</div>
+
+<div style="height:1200px"></div>
+
+</div>
+
+<div class="sidebar">
 
 <div class="card">
 <h3>Rekomendasi Match</h3>
-<p>Nanti bisa isi list pertandingan lain seperti aplikasi Vidio.</p>
+<p>Card kosong seperti aplikasi Vidio.</p>
 </div>
 
 <div class="card">
-<h3>Live Chat atau Iklan Native</h3>
-<p>Area tambahan bebas kamu isi script lain.</p>
+<h3>Live Sekarang</h3>
+<p>List pertandingan live.</p>
 </div>
 
 </div>
@@ -136,6 +161,19 @@ aspect-ratio:16/9;
 </div>
 
 <script>
+const videoBox=document.getElementById("videoBox");
+
+/* MINI PLAYER SCROLL */
+window.addEventListener("scroll",()=>{
+const rect=videoBox.getBoundingClientRect();
+if(rect.bottom<0){
+videoBox.classList.add("mini");
+}else{
+videoBox.classList.remove("mini");
+}
+});
+
+/* STREAM LOAD */
 function getQueryVariable(variable){
 var query=window.location.search.substring(1);
 var vars=query.split("@");
@@ -165,11 +203,9 @@ const iframe=document.getElementById('view');
 iframe.src=url;
 iframe.onload=hideLoader;
 }else{
-alert("Gagal decode URL streaming.");
 hideLoader();
 }
 }else{
-alert("Parameter URL streaming tidak ditemukan.");
 hideLoader();
 }
 };
