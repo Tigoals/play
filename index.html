@@ -59,31 +59,9 @@ aspect-ratio:16/9;
 background:#000;
 border-radius:14px;
 overflow:hidden;
-transition:.3s;
 }
 
 iframe{width:100%;height:100%;border:none}
-
-.video-wrapper.mini{
-position:fixed;
-width:320px;
-height:180px;
-bottom:80px;
-right:16px;
-z-index:9999;
-box-shadow:0 10px 40px rgba(0,0,0,.6);
-}
-
-.close-mini{
-position:absolute;
-top:6px;
-right:6px;
-background:#000a;
-border-radius:50%;
-padding:4px 8px;
-cursor:pointer;
-font-size:12px;
-}
 
 /* CARD */
 .card{
@@ -117,6 +95,7 @@ padding:10px 0;
 font-size:12px;
 opacity:.7;
 }
+
 @media(min-width:900px){
 .bottom-nav{display:none}
 }
@@ -134,6 +113,7 @@ border-radius:50%;
 animation:spin 1s linear infinite;
 transform:translate(-50%,-50%);
 }
+
 .hidden{display:none}
 @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
 </style>
@@ -152,7 +132,6 @@ transform:translate(-50%,-50%);
 
 <div id="videoBox" class="video-wrapper">
 <div class="loader" id="loader"></div>
-<div class="close-mini" id="closeMini">✕</div>
 <iframe id="view" allowfullscreen></iframe>
 </div>
 
@@ -178,36 +157,6 @@ transform:translate(-50%,-50%);
 </div>
 
 <script>
-const videoBox=document.getElementById("videoBox");
-
-/* MINI PLAYER */
-window.addEventListener("scroll",()=>{
-const rect=videoBox.getBoundingClientRect();
-if(rect.bottom<0){videoBox.classList.add("mini")}
-else{videoBox.classList.remove("mini")}
-});
-
-/* CLOSE MINI */
-document.getElementById("closeMini").onclick=()=>{
-videoBox.classList.remove("mini");
-};
-
-/* DRAG MINI PLAYER */
-let isDrag=false,offsetX,offsetY;
-videoBox.addEventListener("mousedown",e=>{
-if(!videoBox.classList.contains("mini"))return;
-isDrag=true;
-offsetX=e.clientX-videoBox.offsetLeft;
-offsetY=e.clientY-videoBox.offsetTop;
-});
-document.addEventListener("mousemove",e=>{
-if(!isDrag)return;
-videoBox.style.left=e.clientX-offsetX+"px";
-videoBox.style.top=e.clientY-offsetY+"px";
-videoBox.style.right="auto";
-videoBox.style.bottom="auto";
-});
-document.addEventListener("mouseup",()=>isDrag=false);
 
 /* LOAD STREAM */
 function getQueryVariable(v){
@@ -219,10 +168,14 @@ if(pair[0]==v){return pair[1]}
 }
 return false;
 }
+
 function base64Decode(str){
 try{return decodeURIComponent(escape(atob(str)));}catch(e){return null;}
 }
-function hideLoader(){document.getElementById('loader').classList.add('hidden')}
+
+function hideLoader(){
+document.getElementById('loader').classList.add('hidden')
+}
 
 window.onload=function(){
 const encodedUrl=getQueryVariable("url");
@@ -235,6 +188,7 @@ iframe.onload=hideLoader;
 }else{hideLoader();}
 }else{hideLoader();}
 };
+
 </script>
 
 </body>
