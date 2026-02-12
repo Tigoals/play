@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Score808 Stream Viewer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Score808 Premium Player</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -14,185 +14,215 @@ background:#020617;
 color:#fff;
 }
 
-/* ===== LAYOUT ===== */
+/* HEADER */
+.header{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+padding:12px 16px;
+background:linear-gradient(to bottom,rgba(0,0,0,.8),transparent);
+z-index:999;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{font-weight:700;color:#facc15}
+.subscribe{
+background:#e11d48;
+padding:8px 14px;
+border-radius:999px;
+font-size:13px;
+font-weight:600;
+}
+
+/* LAYOUT */
 .container{
 max-width:1400px;
 margin:auto;
-padding:12px;
+padding:70px 12px 80px;
 display:grid;
 grid-template-columns:2fr 1fr;
-gap:18px;
+gap:16px;
 }
 
-/* MOBILE */
 @media(max-width:900px){
 .container{grid-template-columns:1fr}
 }
 
-/* ===== VIDEO AREA ===== */
+/* VIDEO */
 .video-wrapper{
 position:relative;
 width:100%;
 aspect-ratio:16/9;
 background:#000;
-border-radius:12px;
+border-radius:14px;
 overflow:hidden;
 transition:.3s;
 }
 
-iframe{
-width:100%;
-height:100%;
-border:none;
-}
+iframe{width:100%;height:100%;border:none}
 
-/* MINI PLAYER MODE */
 .video-wrapper.mini{
 position:fixed;
 width:320px;
 height:180px;
-bottom:20px;
-right:20px;
+bottom:80px;
+right:16px;
 z-index:9999;
-border-radius:12px;
-box-shadow:0 8px 30px rgba(0,0,0,.6);
+box-shadow:0 10px 40px rgba(0,0,0,.6);
 }
 
-/* ===== LOADER ===== */
+.close-mini{
+position:absolute;
+top:6px;
+right:6px;
+background:#000a;
+border-radius:50%;
+padding:4px 8px;
+cursor:pointer;
+font-size:12px;
+}
+
+/* CARD */
+.card{
+background:#0f172a;
+padding:14px;
+border-radius:14px;
+margin-bottom:12px;
+box-shadow:0 4px 14px rgba(0,0,0,.4);
+}
+
+.card h3{font-size:14px;color:#facc15;margin-bottom:6px}
+.card p{font-size:13px;opacity:.7}
+
+/* SIDEBAR */
+.sidebar{position:sticky;top:70px;height:fit-content}
+
+/* BOTTOM NAV MOBILE */
+.bottom-nav{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#020617;
+border-top:1px solid #1e293b;
+display:flex;
+justify-content:space-around;
+padding:10px 0;
+}
+
+.bottom-nav span{
+font-size:12px;
+opacity:.7;
+}
+@media(min-width:900px){
+.bottom-nav{display:none}
+}
+
+/* LOADER */
 .loader{
 position:absolute;
 top:50%;
 left:50%;
-width:50px;
-height:50px;
-border:5px solid #38bdf8;
+width:40px;
+height:40px;
+border:4px solid #38bdf8;
 border-top-color:transparent;
 border-radius:50%;
 animation:spin 1s linear infinite;
 transform:translate(-50%,-50%);
-z-index:2;
 }
-
-.loader-text{
-position:absolute;
-top:calc(50% + 40px);
-left:50%;
-transform:translateX(-50%);
-font-size:14px;
-color:#38bdf8;
-}
-
 .hidden{display:none}
-
-@keyframes spin{
-to{transform:translate(-50%,-50%) rotate(360deg)}
-}
-
-/* ===== CARD ===== */
-.card{
-background:#0f172a;
-padding:16px;
-border-radius:14px;
-margin-bottom:14px;
-box-shadow:0 4px 14px rgba(0,0,0,.4);
-}
-
-.card h3{
-font-size:15px;
-margin-bottom:8px;
-color:#facc15;
-}
-
-.card p{
-font-size:13px;
-opacity:.7;
-}
-
-/* DESKTOP SIDEBAR */
-.sidebar{
-position:sticky;
-top:12px;
-height:fit-content;
-}
-
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
 </style>
 </head>
 
 <body>
+
+<div class="header">
+<div class="logo">Score808 Premium</div>
+<div class="subscribe">Subscribe</div>
+</div>
 
 <div class="container">
 
 <div>
 
 <div id="videoBox" class="video-wrapper">
-<div id="loader" class="loader"></div>
-<div id="loader-text" class="loader-text">Memuat Streaming...</div>
+<div class="loader" id="loader"></div>
+<div class="close-mini" id="closeMini">✕</div>
 <iframe id="view" allowfullscreen></iframe>
 </div>
 
-<div class="card">
-<h3>Info Pertandingan</h3>
-<p>Deskripsi pertandingan atau statistik.</p>
-</div>
-
-<div class="card">
-<h3>Highlight</h3>
-<p>Konten tambahan di bawah video.</p>
-</div>
+<div class="card"><h3>Info Match</h3><p>Deskripsi pertandingan.</p></div>
+<div class="card"><h3>Highlight</h3><p>Konten tambahan.</p></div>
 
 <div style="height:1200px"></div>
 
 </div>
 
 <div class="sidebar">
-
-<div class="card">
-<h3>Rekomendasi Match</h3>
-<p>Card kosong seperti aplikasi Vidio.</p>
-</div>
-
-<div class="card">
-<h3>Live Sekarang</h3>
-<p>List pertandingan live.</p>
+<div class="card"><h3>Live Sekarang</h3><p>Card kosong seperti Vidio.</p></div>
+<div class="card"><h3>Rekomendasi</h3><p>List pertandingan.</p></div>
 </div>
 
 </div>
 
+<div class="bottom-nav">
+<span>Home</span>
+<span>Live</span>
+<span>Jadwal</span>
+<span>Akun</span>
 </div>
 
 <script>
 const videoBox=document.getElementById("videoBox");
 
-/* MINI PLAYER SCROLL */
+/* MINI PLAYER */
 window.addEventListener("scroll",()=>{
 const rect=videoBox.getBoundingClientRect();
-if(rect.bottom<0){
-videoBox.classList.add("mini");
-}else{
-videoBox.classList.remove("mini");
-}
+if(rect.bottom<0){videoBox.classList.add("mini")}
+else{videoBox.classList.remove("mini")}
 });
 
-/* STREAM LOAD */
-function getQueryVariable(variable){
-var query=window.location.search.substring(1);
-var vars=query.split("@");
+/* CLOSE MINI */
+document.getElementById("closeMini").onclick=()=>{
+videoBox.classList.remove("mini");
+};
+
+/* DRAG MINI PLAYER */
+let isDrag=false,offsetX,offsetY;
+videoBox.addEventListener("mousedown",e=>{
+if(!videoBox.classList.contains("mini"))return;
+isDrag=true;
+offsetX=e.clientX-videoBox.offsetLeft;
+offsetY=e.clientY-videoBox.offsetTop;
+});
+document.addEventListener("mousemove",e=>{
+if(!isDrag)return;
+videoBox.style.left=e.clientX-offsetX+"px";
+videoBox.style.top=e.clientY-offsetY+"px";
+videoBox.style.right="auto";
+videoBox.style.bottom="auto";
+});
+document.addEventListener("mouseup",()=>isDrag=false);
+
+/* LOAD STREAM */
+function getQueryVariable(v){
+var q=window.location.search.substring(1);
+var vars=q.split("@");
 for(var i=0;i<vars.length;i++){
 var pair=vars[i].split("+");
-if(pair[0]==variable){return pair[1]}
+if(pair[0]==v){return pair[1]}
 }
 return false;
 }
-
 function base64Decode(str){
-try{return decodeURIComponent(escape(atob(str)));}
-catch(e){return null;}
+try{return decodeURIComponent(escape(atob(str)));}catch(e){return null;}
 }
-
-function hideLoader(){
-document.getElementById('loader').classList.add('hidden');
-document.getElementById('loader-text').classList.add('hidden');
-}
+function hideLoader(){document.getElementById('loader').classList.add('hidden')}
 
 window.onload=function(){
 const encodedUrl=getQueryVariable("url");
@@ -202,12 +232,8 @@ if(url){
 const iframe=document.getElementById('view');
 iframe.src=url;
 iframe.onload=hideLoader;
-}else{
-hideLoader();
-}
-}else{
-hideLoader();
-}
+}else{hideLoader();}
+}else{hideLoader();}
 };
 </script>
 
