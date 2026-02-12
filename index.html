@@ -152,7 +152,7 @@ Subscribe
 
 <div class="card"><h3>Pengguna yang terhormat:</h3><p>Alamat situs web (website) saat ini adalah: tigoals.candil.eu.org. Silakan untuk menandai tautan Alternatif kami terlebih dahulu untuk tetap terkini bersama kami!</p></div>
 <div class="card"><h3>Highlight</h3><p>Video Highlights Pertandingan</p>
-<iframe title='live skor' id='score808frame' loading='lazy' scrolling='no' src='https://official.score808.my.id/p/highlights.html' style='width: 100%; border: none;'></iframe></div>
+<iframe title='live skor' id='score808frame' loading='lazy' scrolling='no' src='https://official.tigoals.my.id/p/highlights-score808.html' style='width: 100%; border: none;'></iframe></div>
 
 <!--<div style="height:1200px"></div>-->
 
@@ -206,7 +206,7 @@ iframe.onload=hideLoader;
 };
 
 window.addEventListener("message", function(e) {
-    if (e.origin !== "https://official.tigoals.my.id") return;
+    if (e.origin !== "https://official.score808.my.id") return;
     const iframe = document.getElementById("score808frame");
     if (e.data && e.data.height) {
       iframe.style.height = e.data.height + "px";
