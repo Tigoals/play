@@ -28,13 +28,20 @@ justify-content:space-between;
 align-items:center;
 }
 
-.logo{font-weight:700;color:#facc15}
+.logo{
+font-weight:700;
+color:#facc15;
+text-decoration:none;
+}
+
 .subscribe{
 background:#e11d48;
 padding:8px 14px;
 border-radius:999px;
 font-size:13px;
 font-weight:600;
+text-decoration:none;
+color:#fff;
 }
 
 /* LAYOUT */
@@ -78,7 +85,7 @@ box-shadow:0 4px 14px rgba(0,0,0,.4);
 /* SIDEBAR */
 .sidebar{position:sticky;top:70px;height:fit-content}
 
-/* BOTTOM NAV MOBILE */
+/* BOTTOM NAV */
 .bottom-nav{
 position:fixed;
 bottom:0;
@@ -91,10 +98,14 @@ justify-content:space-around;
 padding:10px 0;
 }
 
-.bottom-nav span{
+.bottom-nav a{
 font-size:12px;
 opacity:.7;
+text-decoration:none;
+color:#fff;
 }
+
+.bottom-nav a:hover{opacity:1}
 
 @media(min-width:900px){
 .bottom-nav{display:none}
@@ -122,8 +133,12 @@ transform:translate(-50%,-50%);
 <body>
 
 <div class="header">
-<div class="logo">Score808 Premium</div>
-<div class="subscribe">Subscribe</div>
+<a href="/" class="logo">Score808 Premium</a>
+
+<!-- SUBSCRIBE LINK -->
+<a href="https://example.com/subscribe" class="subscribe">
+Subscribe
+</a>
 </div>
 
 <div class="container">
@@ -149,16 +164,15 @@ transform:translate(-50%,-50%);
 
 </div>
 
+<!-- NAV LINK -->
 <div class="bottom-nav">
-<span>Home</span>
-<span>Live</span>
-<span>Jadwal</span>
-<span>Akun</span>
+<a href="/">Home</a>
+<a href="/live">Live</a>
+<a href="/jadwal">Jadwal</a>
+<a href="/akun">Akun</a>
 </div>
 
 <script>
-
-/* LOAD STREAM */
 function getQueryVariable(v){
 var q=window.location.search.substring(1);
 var vars=q.split("@");
@@ -188,7 +202,6 @@ iframe.onload=hideLoader;
 }else{hideLoader();}
 }else{hideLoader();}
 };
-
 </script>
 
 </body>
