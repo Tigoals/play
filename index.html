@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Score808 Stream Viewer</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+font-family:system-ui,-apple-system,Segoe UI;
+background:#020617;
+color:#fff;
+}
+
+/* ===== APP LAYOUT ===== */
+.app{
+display:flex;
+flex-direction:column;
+height:100vh;
+overflow:hidden;
+}
+
+/* ===== VIDEO AREA ===== */
+.video-area{
+position:relative;
+width:100%;
+aspect-ratio:16/9;
+background:#000;
+}
+
+iframe{
+width:100%;
+height:100%;
+border:none;
+}
+
+/* ===== LOADER ===== */
+.loader{
+position:absolute;
+top:50%;
+left:50%;
+width:55px;
+height:55px;
+border:5px solid #38bdf8;
+border-top-color:transparent;
+border-radius:50%;
+animation:spin 1s linear infinite;
+transform:translate(-50%,-50%);
+z-index:3;
+}
+
+.loader-text{
+position:absolute;
+top:calc(50% + 45px);
+left:50%;
+transform:translateX(-50%);
+font-size:14px;
+color:#38bdf8;
+z-index:3;
+}
+
+.hidden{display:none}
+
+@keyframes spin{
+to{transform:translate(-50%,-50%) rotate(360deg)}
+}
+
+/* ===== CARD SECTION ===== */
+.content{
+flex:1;
+overflow-y:auto;
+padding:14px;
+}
+
+/* ===== CARD VIDIO STYLE ===== */
+.card{
+background:#0f172a;
+border-radius:14px;
+padding:16px;
+margin-bottom:14px;
+box-shadow:0 4px 14px rgba(0,0,0,.4);
+}
+
+.card h3{
+font-size:15px;
+margin-bottom:8px;
+color:#facc15;
+}
+
+.card p{
+font-size:13px;
+opacity:.7;
+}
+
+/* MOBILE */
+@media(max-width:600px){
+.video-area{
+aspect-ratio:16/9;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="video-area">
+<div id="loader" class="loader"></div>
+<div id="loader-text" class="loader-text">Memuat Streaming...</div>
+<iframe id="view" allowfullscreen></iframe>
+</div>
+
+<div class="content">
+
+<div class="card">
+<h3>Info Pertandingan</h3>
+<p>Area card kosong bisa isi jadwal, deskripsi, atau statistik.</p>
+</div>
+
+<div class="card">
+<h3>Rekomendasi Match</h3>
+<p>Nanti bisa isi list pertandingan lain seperti aplikasi Vidio.</p>
+</div>
+
+<div class="card">
+<h3>Live Chat atau Iklan Native</h3>
+<p>Area tambahan bebas kamu isi script lain.</p>
+</div>
+
+</div>
+
+</div>
+
+<script>
+function getQueryVariable(variable){
+var query=window.location.search.substring(1);
+var vars=query.split("@");
+for(var i=0;i<vars.length;i++){
+var pair=vars[i].split("+");
+if(pair[0]==variable){return pair[1]}
+}
+return false;
+}
+
+function base64Decode(str){
+try{return decodeURIComponent(escape(atob(str)));}
+catch(e){return null;}
+}
+
+function hideLoader(){
+document.getElementById('loader').classList.add('hidden');
+document.getElementById('loader-text').classList.add('hidden');
+}
+
+window.onload=function(){
+const encodedUrl=getQueryVariable("url");
+if(encodedUrl){
+const url=base64Decode(encodedUrl);
+if(url){
+const iframe=document.getElementById('view');
+iframe.src=url;
+iframe.onload=hideLoader;
+}else{
+alert("Gagal decode URL streaming.");
+hideLoader();
+}
+}else{
+alert("Parameter URL streaming tidak ditemukan.");
+hideLoader();
+}
+};
+</script>
+
+</body>
+</html>
