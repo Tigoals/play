@@ -81,7 +81,55 @@ box-shadow:0 4px 14px rgba(0,0,0,.4);
 
 .card h3{font-size:14px;color:#facc15;margin-bottom:6px}
 .card p{font-size:13px;opacity:.7}
+.domain{
+  display:inline-block;
+  margin:10px 0;
+  padding:6px 12px;
+  border-radius:999px;
+  background:#0f172a;
+  border:1px solid rgba(255,255,255,.1);
+  font-weight:700;
+  font-size:14px;
+  color:#38bdf8;
+}
 
+/* tombol live modern */
+.live-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  margin-top:14px;
+  padding:12px 18px;
+  background:linear-gradient(135deg,#ef4444,#dc2626);
+  border-radius:999px;
+  text-decoration:none;
+  color:#fff;
+  font-weight:700;
+  font-size:14px;
+  transition:.25s ease;
+  box-shadow:0 4px 14px rgba(239,68,68,.35);
+}
+
+.live-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(239,68,68,.5);
+}
+
+.live-dot{
+  width:8px;
+  height:8px;
+  background:#fff;
+  border-radius:50%;
+  animation:pulse 1.2s infinite;
+}
+
+@keyframes pulse{
+  0%{opacity:1}
+  50%{opacity:.3}
+  100%{opacity:1}
+}
+    
 /* SIDEBAR */
 .sidebar{position:sticky;top:70px;height:fit-content}
 
@@ -150,7 +198,18 @@ Subscribe
 <iframe id="view" allowfullscreen></iframe>
 </div>
 
-<div class="card"><h3>Pengguna yang terhormat:</h3><p>Alamat situs web (website) saat ini adalah: tigoals.candil.eu.org. Silakan untuk menandai tautan Alternatif kami terlebih dahulu untuk tetap terkini bersama kami!</p></div>
+<div class="card">  <h3>Pengguna yang terhormat</h3>
+  <p>Alamat situs web saat ini</p>
+
+  <div class="domain">tigoals.candil.eu.org</div>
+
+  <p>Silakan tandai tautan alternatif kami terlebih dahulu agar tetap mendapatkan update terbaru.</p>
+
+  <a href="https://tigoals-indonesia.pages.dev/link" class="live-btn">
+    <span class="live-dot"></span>
+    Live Streaming
+  </a>
+</div>
 <div class="card"><h3>Highlight</h3><p>Video Highlights Pertandingan</p>
 <iframe title='live skor' id='score808frame' loading='lazy' scrolling='no' src='https://official.tigoals.my.id/p/highlights-score808.html' style='width: 100%; border: none;'></iframe></div>
 
