@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Score808 Stream Viewer</title>
+  <link rel="icon" href="https://808.beritanasional.eu.org/favicon.ico" type="image/x-icon" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0f172a;
+    }
+
+    iframe#view {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      z-index: 2;
+    }
+
+.loader,
+.loader-text {
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+    .hidden {
+      display: none !important;
+    }
+    /* Branding pojok */
+    .branding {
+position: fixed;
+    top: 12px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.75);
+    color: #facc15;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 6px 14px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 5;
+    text-shadow: 1px 1px 2px #000;
+    }
+
+    img[src^="https://um.simpli.fi/"],
+    img[src^="https://i.liadm.com/"] {
+      display: none;
+    }
+  </style>
+  <link rel="preconnect" href="https://s10.histats.com">
+<link rel="dns-prefetch" href="//s10.histats.com">
+</head>
+<body>
+
+  <!-- Loader -->
+  <div id="loader" class="loader"></div>
+  <div id="loader-text" class="loader-text">Memuat Streaming...</div>
+
+  <!-- Branding -->
+  <div class="branding">www.score808.my.id</div>
+
+  <!-- Iframe -->
+  <iframe id="view" loading="lazy" allowfullscreen></iframe>
+
+  <!-- JS -->
+ <script>
+function getQueryVariable(variable) {
+  const query = window.location.search.substring(1);
+  const vars = query.split("@");
+  for (let i = 0; i < vars.length; i++) {
+    const pair = vars[i].split("+");
+    if (pair[0] === variable) {
+      return pair[1];
+    }
+  }
+  return null;
+}
+
+function base64Decode(str) {
+  try {
+    return decodeURIComponent(atob(str));
+  } catch (e) {
+    return null;
+  }
+}
+
+function hideLoader() {
+  document.getElementById('loader').classList.add('hidden');
+  document.getElementById('loader-text').classList.add('hidden');
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const encodedUrl = getQueryVariable("url");
+
+  if (!encodedUrl) {
+    hideLoader();
+    return;
+  }
+
+  const url = base64Decode(encodedUrl);
+
+  if (!url) {
+    hideLoader();
+    return;
+  }
+
+  const iframe = document.getElementById('view');
+
+  // preload trick (biar cepat)
+  const preload = document.createElement("link");
+  preload.rel = "preconnect";
+  preload.href = new URL(url).origin;
+  document.head.appendChild(preload);
+
+  iframe.src = url;
+
+  iframe.addEventListener("load", hideLoader);
+});
+</script>
+<!-- Histats -->
+  <script type="text/javascript">
+    var _Hasync=_Hasync||[];
+    _Hasync.push(['Histats.start','1,4858913,4,601,110,30,00000100']);
+    _Hasync.push(['Histats.fasi','1']);
+    _Hasync.push(['Histats.track_hits','']);
+    var LazyHistatsLoaded=!1;
+    function loadHistatsScript(){
+      if(LazyHistatsLoaded) return;
+      LazyHistatsLoaded=!0;
+      var hs=document.createElement('script');
+      hs.type='text/javascript';hs.async=!0;
+      hs.src='https://s10.histats.com/js15_as.js';
+      var s=document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(hs,s)
+    }
+    window.addEventListener('scroll',function(){
+      if((document.documentElement.scrollTop!==0||document.body.scrollTop!==0)&&!LazyHistatsLoaded){
+        loadHistatsScript()
+      }
+    },{passive:!0})
+  </script>
+
+  <noscript>
+    <a href="/" target="_blank">
+      <img src="https://sstatic1.histats.com/0.gif?4858913&101" alt="hitstat score808" title="trafick score808" border="0">
+    </a>
+  </noscript>
+ </body>
+</html>
