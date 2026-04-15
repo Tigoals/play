@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Live Match Center | Streaming & Score</title>
+
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/score808pages/football808@main/image/livescore%20808.png">
+
+<meta name="robots" content="noindex, nofollow, noarchive">
+
+<style>
+:root{
+--bg:#0f172a;
+--card:#020617;
+--text:#e5e7eb;
+--muted:#94a3b8;
+--accent:#22c55e;
+--live:#ef4444;
+}
+
+/* GLOBAL */
+body{
+margin:0;
+font-family:system-ui,-apple-system,Segoe UI,Roboto;
+background:var(--bg);
+color:var(--text);
+}
+
+/* HEADER */
+.app-header{
+position:sticky;
+top:0;
+z-index:999;
+background:rgba(2,6,23,.85);
+backdrop-filter:blur(12px);
+padding:14px;
+border-bottom:1px solid rgba(255,255,255,.05);
+text-align:center;
+}
+
+.logo{
+font-size:20px;
+font-weight:700;
+letter-spacing:.5px;
+}
+.logo span{color:var(--accent);}
+
+/* CONTAINER */
+.container{
+max-width:900px;
+margin:auto;
+padding:16px;
+}
+
+/* VIDEO */
+.video-box{
+position:relative;
+width:100%;
+padding-top:56.25%;
+border-radius:16px;
+overflow:hidden;
+background:#000;
+box-shadow:0 20px 40px rgba(0,0,0,.5);
+}
+
+.video-box iframe{
+position:absolute;
+top:0;left:0;
+width:100%;height:100%;
+border:0;
+}
+
+/* PLAY OVERLAY */
+.play-overlay{
+position:absolute;
+inset:0;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+gap:10px;
+background:linear-gradient(to bottom,rgba(0,0,0,.3),rgba(0,0,0,.9));
+cursor:pointer;
+transition:.3s;
+}
+
+.play-btn{
+width:70px;
+height:70px;
+border-radius:50%;
+background:rgba(255,255,255,.1);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+backdrop-filter:blur(10px);
+transition:.3s;
+}
+
+.play-overlay:hover .play-btn{
+transform:scale(1.1);
+background:var(--live);
+}
+
+/* TITLE */
+.title{
+margin-top:12px;
+font-size:18px;
+font-weight:600;
+}
+
+.info{
+font-size:13px;
+color:var(--muted);
+}
+
+/* ACTION WRAPPER */
+.actions{
+display:flex;
+gap:12px;
+margin-top:18px;
+flex-wrap:wrap;
+}
+
+/* BASE BUTTON */
+.btn{
+flex:1;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:8px;
+
+padding:14px 16px;
+border-radius:14px;
+
+font-size:14px;
+font-weight:600;
+text-decoration:none;
+color:#fff;
+
+position:relative;
+overflow:hidden;
+
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
+
+border:1px solid rgba(255,255,255,0.08);
+box-shadow:0 8px 25px rgba(0,0,0,.4);
+
+transition:all .25s ease;
+}
+
+/* ICON */
+.btn::before{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(120deg,transparent,rgba(255,255,255,.15),transparent);
+opacity:0;
+transition:.4s;
+}
+
+/* HOVER */
+.btn:hover{
+transform:translateY(-3px) scale(1.02);
+box-shadow:0 12px 35px rgba(0,0,0,.6);
+}
+
+.btn:hover::before{
+opacity:1;
+animation:shine 1s linear;
+}
+
+@keyframes shine{
+0%{transform:translateX(-100%);}
+100%{transform:translateX(100%);}
+}
+
+/* ACTIVE */
+.btn:active{
+transform:scale(.96);
+opacity:.85;
+}
+
+/* VARIANT COLORS */
+.btn-live{
+background:linear-gradient(135deg,#ef4444,#b91c1c);
+box-shadow:0 0 20px rgba(239,68,68,.5);
+}
+
+.btn-alt{
+background:linear-gradient(135deg,#1f2937,#111827);
+}
+
+.btn-score{
+background:linear-gradient(135deg,#22c55e,#15803d);
+box-shadow:0 0 20px rgba(34,197,94,.4);
+}
+
+/* ICON SIZE */
+.btn span{
+font-size:13px;
+}
+
+/* RESPONSIVE TABLET */
+@media(max-width:768px){
+.actions{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+}
+
+.btn{
+padding:12px 8px;
+font-size:12px;
+border-radius:12px;
+flex-direction:column;
+gap:4px;
+}
+
+.btn span{
+font-size:11px;
+}
+}
+
+/* EXTRA SMALL MOBILE */
+@media(max-width:380px){
+.btn span{
+display:none;
+}
+.btn{
+padding:12px;
+}
+}
+  .ads{
+margin:12px 0;
+padding:6px;
+border-radius:10px;
+background:#fff;
+}
+  /* SOCIAL FLOAT */
+.social-float{
+position:fixed;
+right:12px;
+bottom:90px;
+display:flex;
+flex-direction:column;
+gap:10px;
+z-index:999;
+}
+
+.sf{
+width:42px;
+height:42px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+color:#fff;
+font-size:18px;
+text-decoration:none;
+box-shadow:0 6px 15px rgba(0,0,0,.4);
+transition:.3s;
+}
+
+.sf:hover{transform:scale(1.1);}
+
+.sf.wa{background:#25D366;}
+.sf.fb{background:#1877F2;}
+.sf.yt{background:#FF0000;}
+.sf.tg{background:#0088cc;}
+.sf svg{
+  width:20px;
+  height:20px;
+}
+
+/* biar lebih hidup */
+.sf{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* hover glow */
+.sf.wa:hover{box-shadow:0 0 15px #25D366;}
+.sf.fb:hover{box-shadow:0 0 15px #1877F2;}
+.sf.yt:hover{box-shadow:0 0 15px #FF0000;}
+.sf.tg:hover{box-shadow:0 0 15px #0088cc;}
+/* PLAY UPGRADE */
+.play-btn{
+width:80px;
+height:80px;
+font-size:32px;
+box-shadow:0 0 30px rgba(239,68,68,.4);
+}
+
+/* SMOOTH FADE */
+.video-box iframe{
+animation:fadeIn .5s ease;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:scale(.98);}
+to{opacity:1;transform:scale(1);}
+}
+
+/* TITLE UPGRADE */
+.title{
+font-size:20px;
+font-weight:700;
+letter-spacing:.3px;
+}
+
+/* INFO */
+.info{
+font-size:13px;
+opacity:.8;
+}
+
+/* BUTTON ICON STYLE */
+.btn{
+gap:6px;
+}
+
+/* HOVER EFFECT */
+.btn-live:hover{
+box-shadow:0 0 20px rgba(239,68,68,.7);
+}
+
+.btn-score:hover{
+box-shadow:0 0 20px rgba(34,197,94,.6);
+}
+
+/* DESKTOP IMPROVE */
+@media(min-width:768px){
+.video-box{
+border-radius:20px;
+}
+}
+  /* BUTTON LIVE PRO */
+.btn-live-pro{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:8px;
+
+/*width:100%;*/
+max-width:420px;
+margin:20px auto;
+
+padding:14px 18px;
+border-radius:14px;
+
+font-size:15px;
+font-weight:700;
+text-decoration:none;
+color:#fff;
+
+background:linear-gradient(135deg,#ef4444,#b91c1c);
+box-shadow:0 8px 30px rgba(239,68,68,.4);
+
+position:relative;
+overflow:hidden;
+
+transition:.25s ease;
+}
+
+/* ICON */
+.btn-live-pro svg{
+width:18px;
+height:18px;
+}
+
+/* LIVE DOT */
+.live-dot{
+width:8px;
+height:8px;
+background:#fff;
+border-radius:50%;
+animation:pulse 1.2s infinite;
+}
+
+/* ANIMATION */
+@keyframes pulse{
+0%{transform:scale(1);opacity:1;}
+50%{transform:scale(1.6);opacity:.5;}
+100%{transform:scale(1);opacity:1;}
+}
+
+/* HOVER */
+.btn-live-pro:hover{
+transform:translateY(-3px);
+box-shadow:0 12px 40px rgba(239,68,68,.6);
+}
+
+/* ACTIVE */
+.btn-live-pro:active{
+transform:scale(.96);
+}
+
+/* SHINE EFFECT */
+.btn-live-pro::before{
+content:"";
+position:absolute;
+top:0;
+left:-100%;
+width:100%;
+height:100%;
+background:linear-gradient(120deg,transparent,rgba(255,255,255,.3),transparent);
+transition:.5s;
+}
+
+.btn-live-pro:hover::before{
+left:100%;
+}
+
+/* MOBILE */
+@media(max-width:600px){
+.btn-live-pro{
+font-size:14px;
+padding:12px;
+border-radius:12px;
+}
+}
+/* LOADER FULLSCREEN */
+#loader{
+position:fixed;
+inset:0;
+background:radial-gradient(circle at center,#020617,#000);
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:99999;
+}
+
+/* BOX */
+.loader-box{
+text-align:center;
+}
+
+/* SPINNER MODERN */
+.spinner{
+width:70px;
+height:70px;
+border-radius:50%;
+border:4px solid rgba(255,255,255,.1);
+border-top:4px solid #22c55e;
+animation:spin 1s linear infinite;
+margin:auto;
+box-shadow:0 0 25px rgba(34,197,94,.4);
+}
+
+@keyframes spin{
+to{transform:rotate(360deg);}
+}
+
+/* TEXT */
+.loader-text{
+margin-top:14px;
+font-size:14px;
+color:#94a3b8;
+letter-spacing:.5px;
+}
+
+/* PROGRESS BAR */
+.progress{
+margin-top:10px;
+width:180px;
+height:4px;
+background:rgba(255,255,255,.08);
+border-radius:10px;
+overflow:hidden;
+}
+
+.progress-bar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#22c55e,#4ade80);
+animation:loadProgress 3s ease forwards;
+}
+
+@keyframes loadProgress{
+0%{width:0%;}
+100%{width:100%;}
+}
+
+/* FADE OUT */
+.loader-hide{
+opacity:0;
+visibility:hidden;
+transition:all .5s ease;
+}
+/* BOX */
+.domain-box{
+margin-top:14px;
+padding:16px;
+border-radius:16px;
+
+background:linear-gradient(145deg,#020617,#020617);
+border:1px solid rgba(255,255,255,.06);
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.5),
+0 0 20px rgba(34,197,94,.05);
+
+position:relative;
+overflow:hidden;
+}
+
+/* subtle glow */
+.domain-box::before{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(120deg,transparent,rgba(34,197,94,.08),transparent);
+opacity:.6;
+}
+
+/* HEADER */
+.domain-header{
+font-size:15px;
+font-weight:700;
+color:#22c55e;
+margin-bottom:6px;
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+/* DESC */
+.domain-desc{
+font-size:13px;
+color:#94a3b8;
+line-height:1.5;
+margin-bottom:10px;
+}
+
+/* LINK */
+.domain-link a{
+font-size:14px;
+font-weight:700;
+color:#60a5fa;
+text-decoration:none;
+position:relative;
+}
+
+.domain-link a::after{
+content:"";
+position:absolute;
+left:0;
+bottom:-2px;
+width:100%;
+height:1px;
+background:#60a5fa;
+opacity:.5;
+}
+
+/* HOVER */
+.domain-link a:hover{
+color:#93c5fd;
+}
+
+/* NOTE */
+.domain-note {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #fa0000;
+}
+
+/* MOBILE */
+@media(max-width:480px){
+.domain-box{
+padding:14px;
+}
+.domain-desc{
+font-size:12px;
+}
+}
+
+</style>
+  <script src="https://jsc.mgid.com/site/829703.js" async></script>
+</head>
+
+<body>
+<!-- LOADER PRO -->
+<div id="loader">
+  <div class="loader-box">
+    
+    <div class="spinner"></div>
+    
+    <div class="loader-text">
+      Loading Stream...
+    </div>
+
+    <div class="progress">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+  </div>
+</div>
+<header class="app-header">
+<div class="logo">Score808<span>.Pro</span></div>
+</header>
+
+<div class="container">
+
+<div class="video-box" id="videoBox">
+
+<div class="play-overlay" id="playBtn">
+<div class="play-btn">▶</div>
+<div>Tap untuk memutar</div>
+</div>
+
+</div>
+
+<div class="domain-box">
+
+  <div class="domain-header">
+    🔒 Informasi Resmi Score808
+  </div>
+
+  <div class="domain-desc">
+    Gunakan domain resmi terbaru untuk mengakses layanan live streaming dan live score tanpa gangguan.
+  </div>
+
+  <div class="domain-link">
+    🌐 <a href="https://idn22.score808.eu.org" target="_blank" rel="noopener noreferrer">
+      idn22.score808.eu.org
+    </a>
+  </div>
+  <div class="domain-note">
+    Simpan atau bookmark link alternatif kami untuk mendapatkan update terbaru setiap hari.
+  </div>
+
+</div>
+ 
+  <div class="ads">
+<div data-type="_mgwidget" data-widget-id="1882211"></div>
+<script>(function(w,q){w[q]=w[q]||[];w[q].push(["_mgc.load"])})(window,"_mgq");</script>
+  </div>
+<div class="actions">
+<a href="https://jalalive.beritanasional.eu.org" target="_blank" class="btn btn-live">📺 <span>Live TV</span></a>
+<a href="https://tigoals.candil.eu.org/p/highlights.html" target="_blank" class="btn btn-alt">🔥 <span>Highlights</span></a>
+<a href="https://tigoals.candil.eu.org/" target="_blank" class="btn btn-score">📊 <span>Score</span></a>
+</div>
+<!-- <div href="https://jalalive.beritanasional.eu.org"
+   target="_blank"
+   rel="noopener noreferrer"
+   class="btn-live-pro">
+
+  <span class="live-dot"></span>
+
+  <svg viewBox="0 0 24 24" fill="currentColor">
+    <path d="M21 3H3a2 2 0 00-2 2v12a2 2 0 002 2h7v2H8v2h8v-2h-2v-2h7a2 2 0 002-2V5a2 2 0 00-2-2zm0 14H3V5h18v12z"/>
+  </svg>
+
+  <span>Live on Score808</span>
+</div>-->
+<iframe id='score808frame' title='score808' scrolling='no' loading='lazy' src='https://official.tigoals.my.id/p/layout-pro.html' style='width: 100%; border: none;'></iframe>
+</div>
+<!-- SOCIAL FLOAT -->
+<div class="social-float">
+
+  <!-- WHATSAPP -->
+  <a href="https://www.whatsapp.com/channel/0029VbC7N00EQIaqwkJiAv0Y" target="_blank" class="sf wa" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M20.52 3.48A11.94 11.94 0 0012.06 0C5.5 0 .15 5.35.15 11.91c0 2.1.55 4.16 1.6 5.97L0 24l6.27-1.63a11.9 11.9 0 005.79 1.48h.01c6.56 0 11.91-5.35 11.91-11.91 0-3.18-1.24-6.17-3.46-8.46zM12.07 21.6a9.7 9.7 0 01-4.95-1.36l-.35-.2-3.72.97.99-3.63-.23-.37a9.67 9.67 0 01-1.49-5.1c0-5.36 4.36-9.72 9.73-9.72 2.6 0 5.04 1.01 6.88 2.85a9.67 9.67 0 012.85 6.88c0 5.36-4.36 9.72-9.71 9.72zm5.36-7.28c-.29-.15-1.72-.85-1.98-.95-.27-.1-.47-.15-.66.15-.2.29-.76.95-.93 1.14-.17.2-.34.22-.63.07-.29-.15-1.24-.46-2.36-1.47-.87-.78-1.46-1.74-1.63-2.03-.17-.29-.02-.45.13-.6.13-.13.29-.34.44-.51.15-.17.2-.29.29-.49.1-.2.05-.37-.02-.52-.07-.15-.66-1.6-.91-2.2-.24-.58-.49-.5-.66-.51h-.56c-.2 0-.52.07-.79.37-.27.29-1.03 1.01-1.03 2.46s1.06 2.85 1.21 3.05c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.5 1.69.64.71.23 1.35.2 1.86.12.57-.09 1.72-.7 1.96-1.38.24-.68.24-1.26.17-1.38-.07-.12-.27-.2-.56-.34z"/>
+    </svg>
+  </a>
+
+  <!-- FACEBOOK -->
+  <a href="https://www.facebook.com/profile.php?id=61574589075880" target="_blank" class="sf fb" aria-label="Facebook">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 12a10 10 0 10-11.5 9.87v-6.99H8v-2.88h2.5V9.8c0-2.47 1.47-3.83 3.72-3.83 1.08 0 2.2.19 2.2.19v2.42h-1.24c-1.22 0-1.6.76-1.6 1.54v1.85H16l-.4 2.88h-2.42v6.99A10 10 0 0022 12z"/>
+    </svg>
+  </a>
+
+  <!-- YOUTUBE -->
+  <a href="https://www.youtube.com/@CandilRiyadi" target="_blank" class="sf yt" aria-label="YouTube">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.3 31.3 0 000 12a31.3 31.3 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31.3 31.3 0 0024 12a31.3 31.3 0 00-.5-5.8zM9.75 15.5v-7l6 3.5-6 3.5z"/>
+    </svg>
+  </a>
+
+  <!-- TELEGRAM -->
+  <a href="https://t.me/score808alternative" target="_blank" class="sf tg" aria-label="Telegram">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M9.04 15.56l-.39 5.49c.56 0 .8-.24 1.08-.53l2.6-2.48 5.38 3.94c.99.55 1.69.26 1.96-.92l3.56-16.67c.33-1.54-.55-2.14-1.5-1.79L1.5 9.55c-1.49.58-1.47 1.42-.25 1.8l5.58 1.74L19.6 6.6c.6-.4 1.15-.18.7.22"/>
+    </svg>
+  </a>
+
+</div>
+<script>
+// GET PARAM
+function getParam(){
+const url = window.location.href;
+if(url.includes("url+")) return url.split("url+")[1];
+return null;
+}
+
+// DECODE BASE64
+function decode(str){
+try{
+return decodeURIComponent(atob(str).split('').map(c =>
+'%' + ('00'+c.charCodeAt(0).toString(16)).slice(-2)
+).join(''));
+}catch(e){return null;}
+}
+
+const encoded = getParam();
+const decoded = decode(encoded);
+
+const playBtn = document.getElementById("playBtn");
+const videoBox = document.getElementById("videoBox");
+
+if(decoded){
+playBtn.onclick = () => {
+
+  loader.classList.remove("loader-hide");
+
+  setTimeout(() => {
+    videoBox.innerHTML = `
+    <iframe src="${decoded}" allowfullscreen loading="lazy"></iframe>
+    `;
+
+    setTimeout(()=>{
+      loader.classList.add("loader-hide");
+    }, 1200);
+
+  }, 500);
+
+};
+}
+// LOADER CONTROL
+const loader = document.getElementById("loader");
+
+// Simulasi loading awal
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    loader.classList.add("loader-hide");
+  }, 1500); // bisa kamu ubah (1000-3000ms)
+});
+
+window.addEventListener("message", function(e) {
+    if (e.origin !== "https://official.tigoals.my.id") return;
+    const iframe = document.getElementById("score808frame");
+    if (e.data && e.data.height) {
+      iframe.style.height = e.data.height + "px";
+    }
+  });
+</script>
+
+</body>
+</html>
