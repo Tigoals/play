@@ -12,7 +12,8 @@
 <meta name="description" content="Live score, jadwal pertandingan, dan streaming sepak bola real-time. Update skor cepat dan link streaming resmi." />
 
 <meta name="keywords" content="live score, streaming bola, jadwal bola hari ini, score808, live match, sepak bola live" />
-
+<link rel="preconnect" href="https://idlive.falou.net">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <meta property="og:title" content="Live Match Center - Streaming & Score Real Time" />
 <meta property="og:description" content="Pantau live score dan streaming pertandingan sepak bola terbaru." />
 <meta property="og:type" content="website" />
@@ -26,7 +27,9 @@
 --accent:#22c55e;
 --live:#ef4444;
 }
-
+.livecard-match{
+  will-change: transform;
+}
 /* GLOBAL */
 body{
 margin:0;
@@ -665,7 +668,7 @@ font-size:12px;
 
   <span>Live on Score808</span>
 </div>-->
-<iframe id='score808frame' title='score808' scrolling='no' loading='lazy' src='https://official.tigoals.my.id/p/layout-pro.html' style='width: 100%; border: none;'></iframe>
+<iframe id='score808frame' title="Live Score Bola Hari Ini" loading="lazy" referrerpolicy="no-referrer" scrolling='no' src='https://official.tigoals.my.id/p/layout-pro.html' style='width: 100%; border: none;'></iframe>
 <div id='histats_counter'/>
   
 </div>
@@ -731,7 +734,7 @@ playBtn.onclick = () => {
 
   setTimeout(() => {
     videoBox.innerHTML = `
-    <iframe src="${decoded}" allowfullscreen loading="lazy"></iframe>
+    <iframe src="${decoded}" title="livescore" allowfullscreen loading="lazy"></iframe>
     `;
 
     setTimeout(()=>{
@@ -745,11 +748,8 @@ playBtn.onclick = () => {
 // LOADER CONTROL
 const loader = document.getElementById("loader");
 
-// Simulasi loading awal
 window.addEventListener("load", () => {
-  setTimeout(() => {
-    loader.classList.add("loader-hide");
-  }, 1500); // bisa kamu ubah (1000-3000ms)
+  loader.classList.add("loader-hide");
 });
 
 window.addEventListener("message", function(e) {
