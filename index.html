@@ -200,7 +200,6 @@ font-size:14px;
 display:none;
 }
 </style>
-  <script src="https://jsc.mgid.com/site/829703.js" async></script>
 </head>
 
 <body>
@@ -242,15 +241,32 @@ display:none;
 
 </div>
  
- <div class="ads" id="adsBox"></div>
+<div class="ads" id="adsBox"></div>
 
 <script>
-setTimeout(()=>{
-document.getElementById("adsBox").innerHTML = `
-<div data-type="_mgwidget" data-widget-id="1882211"></div>
-<script>(function(w,q){w[q]=w[q]||[];w[q].push(["_mgc.load"])})(window,"_mgq");<\/script>
-`;
-},3000);
+function loadAds(){
+  const s = document.createElement("script");
+  s.src = "https://jsc.mgid.com/site/829703.js";
+  s.async = true;
+  document.body.appendChild(s);
+
+  const box = document.getElementById("adsBox");
+  box.innerHTML = `<div data-type="_mgwidget" data-widget-id="1882211"></div>`;
+
+  (window._mgq = window._mgq || []).push(["_mgc.load"]);
+}
+
+// load saat user interaksi / scroll
+let adsLoaded = false;
+
+function triggerAds(){
+  if(adsLoaded) return;
+  adsLoaded = true;
+  loadAds();
+}
+
+window.addEventListener("scroll", triggerAds, {passive:true});
+window.addEventListener("click", triggerAds);
 </script>
 <div class="actions">
 <a href="https://jalalive.beritanasional.eu.org" target="_blank" class="btn btn-live">📺 <span>Live TV</span></a>
@@ -331,18 +347,22 @@ const loader = document.getElementById("loader");
 
 if(decoded){
 playBtn.onclick = () => {
+  playBtn.style.display = "none"; // langsung hilang (UX lebih cepat)
   loader.classList.remove("loader-hide");
 
+  videoBox.innerHTML =
+    `<iframe src="${decoded}" allowfullscreen loading="eager"></iframe>`;
+
   setTimeout(()=>{
-    videoBox.innerHTML =
-      `<iframe src="${decoded}" allowfullscreen loading="lazy"></iframe>`;
     loader.classList.add("loader-hide");
-  },400);
+  },300);
 };
 }
 
 // LOAD
-window.onload = () => loader.classList.add("loader-hide");
+document.addEventListener("DOMContentLoaded", () => {
+  loader.classList.add("loader-hide");
+});
 
 // AUTO HEIGHT IFRAME
 window.addEventListener("message", function(e) {
