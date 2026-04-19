@@ -434,74 +434,7 @@ padding:12px;
 border-radius:12px;
 }
 }
-/* LOADER FULLSCREEN */
-#loader{
-position:fixed;
-inset:0;
-background:radial-gradient(circle at center,#020617,#000);
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:99999;
-}
 
-/* BOX */
-.loader-box{
-text-align:center;
-}
-
-/* SPINNER MODERN */
-.spinner{
-width:70px;
-height:70px;
-border-radius:50%;
-border:4px solid rgba(255,255,255,.1);
-border-top:4px solid #22c55e;
-animation:spin 1s linear infinite;
-margin:auto;
-box-shadow:0 0 25px rgba(34,197,94,.4);
-}
-
-@keyframes spin{
-to{transform:rotate(360deg);}
-}
-
-/* TEXT */
-.loader-text{
-margin-top:14px;
-font-size:14px;
-color:#94a3b8;
-letter-spacing:.5px;
-}
-
-/* PROGRESS BAR */
-.progress{
-margin-top:10px;
-width:180px;
-height:4px;
-background:rgba(255,255,255,.08);
-border-radius:10px;
-overflow:hidden;
-}
-
-.progress-bar{
-height:100%;
-width:0%;
-background:linear-gradient(90deg,#22c55e,#4ade80);
-animation:loadProgress 3s ease forwards;
-}
-
-@keyframes loadProgress{
-0%{width:0%;}
-100%{width:100%;}
-}
-
-/* FADE OUT */
-.loader-hide{
-opacity:0;
-visibility:hidden;
-transition:all .5s ease;
-}
 /* BOX */
 .domain-box{
 margin-top:14px;
@@ -588,8 +521,57 @@ padding:14px;
 font-size:12px;
 }
 }
-#loader{
-  transition: all .5s ease;
+/* SKELETON BASE */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+/* SHIMMER EFFECT */
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.08),
+    transparent
+  );
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* VARIAN */
+.skeleton-text {
+  height: 14px;
+  margin: 8px 0;
+  border-radius: 6px;
+}
+
+.skeleton-title {
+  height: 20px;
+  width: 60%;
+  margin-bottom: 10px;
+}
+
+.skeleton-video {
+  width: 100%;
+  padding-top: 56.25%;
+  border-radius: 10px;
+}
+
+.skeleton-btn {
+  height: 40px;
+  border-radius: 10px;
 }
 </style>
   <script src="https://jsc.mgid.com/site/829703.js" async></script>
@@ -597,27 +579,30 @@ font-size:12px;
 
 <body>
 <!-- LOADER PRO -->
-<div id="loader">
-  <div class="loader-box">
-    
-    <div class="spinner"></div>
-    
-    <div class="loader-text">
-      Loading Stream...
-    </div>
 
-    <div class="progress">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
-
-  </div>
-</div>
 <header class="app-header">
 <div class="logo">Score808<span>.Pro</span></div>
 </header>
 
 <div class="container">
+<div id="skeletonWrapper">
 
+  <!-- VIDEO -->
+  <div class="skeleton skeleton-video"></div>
+
+  <!-- TITLE -->
+  <div class="skeleton skeleton-title"></div>
+  <div class="skeleton skeleton-text" style="width:80%"></div>
+  <div class="skeleton skeleton-text" style="width:40%"></div>
+
+  <!-- BUTTON -->
+  <div style="display:flex; gap:10px; margin-top:15px;">
+    <div class="skeleton skeleton-btn" style="flex:1"></div>
+    <div class="skeleton skeleton-btn" style="flex:1"></div>
+    <div class="skeleton skeleton-btn" style="flex:1"></div>
+  </div>
+
+</div>
 <div class="video-box" id="videoBox">
 
 <div class="play-overlay" id="playBtn">
@@ -709,59 +694,45 @@ font-size:12px;
 <script>
 // GET PARAM
 function getParam(){
-const url = window.location.href;
-if(url.includes("url+")) return url.split("url+")[1];
-return null;
+  const url = window.location.href;
+  if(url.includes("url+")) return url.split("url+")[1];
+  return null;
 }
 
 // DECODE BASE64
 function decode(str){
-try{
-return decodeURIComponent(atob(str).split('').map(c =>
-'%' + ('00'+c.charCodeAt(0).toString(16)).slice(-2)
-).join(''));
-}catch(e){return null;}
+  try{
+    return decodeURIComponent(atob(str).split('').map(c =>
+      '%' + ('00'+c.charCodeAt(0).toString(16)).slice(-2)
+    ).join(''));
+  }catch(e){return null;}
 }
 
 const encoded = getParam();
 const decoded = decode(encoded);
 
-const loader = document.getElementById("loader");
 const playBtn = document.getElementById("playBtn");
 const videoBox = document.getElementById("videoBox");
 
-if(decoded){
-  playBtn.onclick = () => {
+playBtn.onclick = () => {
+  playBtn.style.display = "none";
 
-    playBtn.style.display = "none"; // UX lebih smooth
-    loader.classList.remove("loader-hide");
+  skeleton.style.display = "block";
 
-    setTimeout(() => {
-      videoBox.innerHTML = `
-        <iframe src="${decoded}" allowfullscreen loading="eager"></iframe>
-      `;
+  setTimeout(() => {
+    videoBox.innerHTML = `<iframe src="${decoded}" loading="lazy" allowfullscreen></iframe>`;
+    skeleton.style.display = "none";
+  }, 800);
+};
 
-      // tunggu iframe render
-      setTimeout(() => {
-        loader.classList.add("loader-hide");
-      }, 1200);
-
-    }, 300);
-  };
-}
-// LOADER CONTROL
-
-window.addEventListener("load", () => {
-  loader.classList.add("loader-hide");
-});
-
+// AUTO HEIGHT IFRAME
 window.addEventListener("message", function(e) {
-    if (e.origin !== "https://official.tigoals.my.id") return;
-    const iframe = document.getElementById("score808frame");
-    if (e.data && e.data.height) {
-      iframe.style.height = e.data.height + "px";
-    }
-  });
+  if (e.origin !== "https://official.tigoals.my.id") return;
+  const iframe = document.getElementById("score808frame");
+  if (e.data && e.data.height) {
+    iframe.style.height = e.data.height + "px";
+  }
+});
 </script>
   <script type="text/javascript">
 //<![CDATA[
@@ -769,7 +740,21 @@ window.addEventListener("message", function(e) {
 window.addEventListener('scroll',function(){if((document.documentElement.scrollTop!==0||document.body.scrollTop!==0)&&!LazyHistatsLoaded){loadHistatsScript()}},{passive:!0})
 //]]>
 </script>
+<script>
+const skeleton = document.getElementById("skeletonWrapper");
+const realContent = document.querySelector(".container");
 
+// sembunyikan konten asli dulu
+realContent.style.display = "none";
+
+// simulasi load (atau bisa diganti event real)
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    skeleton.style.display = "none";
+    realContent.style.display = "block";
+  }, 800); // delay biar smooth
+});
+</script>
 <noscript>
   <a href="/" target="_blank">
     <img class="lazyload" src="https://sstatic1.histats.com/0.gif?4858913&101" alt="hitstat score808" title="trafick score808" border="0">
