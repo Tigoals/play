@@ -269,14 +269,14 @@ margin:12px 0;
 
   <span class="server-badge">HD</span>
 </div>
-  <iframe id="score808frame" title="livescore" scrolling='no' data-src="https://official.tigoals.my.id/p/livescore-today.html" style="width:100%;border:none;margin-top:20px;"></iframe>
+  <iframe id='score808frame' title="score808 app" loading="lazy" scrolling='no' src='https://official.tigoals.my.id/p/livescore-today.html' style='width: 100%; border: none;'></iframe>
   <!-- DISCLAIMER -->
   <div class="tg-disclaimer">
     Sumber data berasal dari pihak ketiga.
   </div>
 <div id='histats_counter'/>
 </div>
-  <script>
+	<script>//<![CDATA[ 
 window.addEventListener("message", function(e) {
     if (e.origin !== "https://official.tigoals.my.id") return;
     const iframe = document.getElementById("score808frame");
@@ -284,7 +284,7 @@ window.addEventListener("message", function(e) {
       iframe.style.height = e.data.height + "px";
     }
   });
-</script>
+  //]]> </script>
 <script>
 (function(){
 
