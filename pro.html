@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Live Score Hari Ini</title>
+<meta name="description" content="Live score dan statistik pertandingan sepak bola real-time hari ini.">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/score808pages/football808@main/image/livescore%20808.png">
+<!-- PRELOAD -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<script src="https://jsc.mgid.com/site/829703.js" async></script>
+<style>
+:root{
+  --primary:#ff004c;
+  --gradient:linear-gradient(135deg,#ff004c,#ff5e00);
+  --bg:#f8fafc;
+}
+
+body{
+  margin:0;
+  font-family:Inter,system-ui,sans-serif;
+  background:var(--bg);
+  color:#111;
+}
+
+/* CONTAINER */
+.tg-view{
+  max-width:880px;
+  margin:auto;
+  padding:14px;
+}
+
+/* HEADER */
+.tg-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#fff;
+  padding:12px 14px;
+  border-radius:14px;
+  box-shadow:0 5px 18px rgba(0,0,0,.05);
+  margin-bottom:14px;
+}
+
+.tg-title{
+  font-size:15px;
+  font-weight:600;
+}
+
+/* CONTENT */
+.tg-content h2{
+  font-size:18px;
+  margin-bottom:6px;
+}
+.tg-content p{
+  color:#6b7280;
+  line-height:1.6;
+}
+
+/* FRAME */
+.tg-frame-box{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+/* IFRAME */
+#tg-frame{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:0;
+  opacity:0;
+  transition:.4s ease;
+}
+
+#tg-frame.show{
+  opacity:1;
+}
+
+/* SKELETON */
+.tg-skeleton{
+  position:absolute;
+  inset:0;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  background:#fff;
+  z-index:2;
+}
+
+.tg-skeleton div{
+  height:12px;
+  border-radius:6px;
+  background:linear-gradient(90deg,#eee,#ddd,#eee);
+  background-size:300% 100%;
+  animation:shimmer 1.2s infinite;
+}
+
+@keyframes shimmer{
+  0%{background-position:-300px}
+  100%{background-position:300px}
+}
+
+/* BUTTON LIVE */
+.tv-live-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:14px;
+  margin-top:18px;
+  background:var(--gradient);
+  color:#fff;
+  text-decoration:none;
+  border-radius:18px;
+  font-weight:700;
+  box-shadow:0 10px 25px rgba(255,0,76,.3);
+  transition:.3s;
+}
+
+.tv-live-btn:hover{
+  transform:translateY(-3px);
+}
+
+/* ALERT */
+.tg-info{
+  margin-top:16px;
+  padding:14px;
+  border-radius:12px;
+  background:#eef6ff;
+  font-size:14px;
+  color:#1e40af;
+}
+
+/* DISCLAIMER */
+.tg-disclaimer{
+  margin-top:14px;
+  font-size:13px;
+  color:#9ca3af;
+}
+
+/* MOBILE */
+@media(max-width:480px){
+  .tg-title{font-size:14px}
+}
+  /* ADS */
+.ads{
+min-height:250px; /* anti CLS */
+/* background:rgba(255,255,255,.05);*/
+  background:#fff;
+border:1px dashed rgba(255,255,255,.1);
+border-radius:10px;
+margin:12px 0;
+}
+  .more-server-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 16px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 10px 30px rgba(0,0,0,.25);
+  margin:12px 0;
+  color:#fff;
+}
+
+.server-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.server-left svg{
+  width:22px;
+  height:22px;
+  color:#38bdf8;
+  flex-shrink:0;
+}
+
+.server-left .label{
+  display:block;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  color:#94a3b8;
+}
+
+.server-left h3{
+  margin:2px 0 0;
+  font-size:15px;
+  font-weight:700;
+}
+
+.server-badge{
+  background:rgba(34,197,94,.15);
+  color:#22c55e;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+</style>
+  <script>(function(s){s.dataset.zone='11243317',s.src='https://llvpn.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+</head>
+
+<body>
+
+<div class="tg-view">
+
+  <!-- HEADER -->
+  <div class="tg-header">
+    <div id="tg-title" class="tg-title">Live Match</div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="tg-content">
+    <h2>Live Score & Statistik</h2>
+    <p>Pantau skor, statistik, dan performa tim secara real-time.</p>
+  </div>
+
+  <!-- FRAME -->
+  <div class="tg-frame-box">
+
+    <div class="tg-skeleton" id="tg-loader">
+      <div style="width:40%"></div>
+      <div></div>
+      <div style="width:60%"></div>
+    </div>
+
+    <iframe id="tg-frame"
+      loading="lazy"
+      referrerpolicy="no-referrer"
+      sandbox="allow-scripts allow-same-origin">
+    </iframe>
+
+  </div>
+<div class="ads">
+<div data-type="_mgwidget" data-widget-id="1882211"></div>
+<script>(function(w,q){w[q]=w[q]||[];w[q].push(["_mgc.load"]) })(window,"_mgq");</script>
+</div>
+  <!-- BUTTON -->
+<!--  <a class="tv-live-btn" href="https://bitly.candil.eu.org/tv">
+    ▶ Live on TV
+  </a>-->
+
+  <!-- INFO -->
+  <div class="tg-info">
+    Data hanya berupa statistik pertandingan (tanpa video).
+  </div>
+<div class="more-server-card">
+  <div class="server-left">
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <span class="label">Streaming Options</span>
+      <h3>More Servers</h3>
+    </div>
+  </div>
+
+  <span class="server-badge">HD</span>
+</div>
+  <div class="server-heading">
+  <span class="server-label">
+    <span class="server-dot"></span>
+    STREAMING NETWORK
+  </span>
+
+  <h2>Choose the Best Streaming Server</h2>
+
+  <p>
+    Multiple high-performance servers are available to deliver a faster,
+    smoother, and more reliable live streaming experience across all devices.
+  </p>
+</div>
+  <!-- TV & HIGHLIGHTS BUTTON -->
+<div id="bioLinks" class="bio-links">
+
+  <!-- Server 1 -->
+  <a class="bio-btn" href="https://free.beritanasional.eu.org/" target="_blank"
+    rel="nofollow sponsored noopener noreferrer">
+    <div class="bio-btn-left">
+
+      <div class="bio-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="23 7 16 12 23 17 23 7"/>
+          <rect x="1" y="5" width="15" height="14" rx="2"/>
+        </svg>
+      </div>
+
+      <div class="bio-text">
+        <strong>Server 1</strong>
+        <span>Fast Streaming</span>
+      </div>
+
+    </div>
+
+    <div class="bio-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </div>
+  </a>
+
+  <!-- Server 2 -->
+  <a class="bio-btn" href="https://link.score808.my.id/" target="_blank"
+    rel="nofollow sponsored noopener noreferrer">
+    <div class="bio-btn-left">
+
+      <div class="bio-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="14" rx="2"/>
+          <path d="M8 20h8"/>
+          <path d="M12 18v2"/>
+        </svg>
+      </div>
+
+      <div class="bio-text">
+        <strong>Server 2</strong>
+        <span>HD Quality</span>
+      </div>
+
+    </div>
+
+    <div class="bio-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </div>
+  </a>
+
+  <!-- Server 3 -->
+  <a class="bio-btn" href="https://tigoals11.score808.eu.org/" target="_blank"
+    rel="nofollow sponsored noopener noreferrer">
+    <div class="bio-btn-left">
+
+      <div class="bio-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2L4 14h7l-1 8 10-13h-7l1-7z"/>
+        </svg>
+      </div>
+
+      <div class="bio-text">
+        <strong>Server 3</strong>
+        <span>Backup Server</span>
+      </div>
+
+    </div>
+
+    <div class="bio-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </div>
+  </a>
+
+  <!-- Server 4 -->
+  <a class="bio-btn" href="https://tigoals4.score808.eu.org/" target="_blank"
+    rel="nofollow sponsored noopener noreferrer">
+    <div class="bio-btn-left">
+
+      <div class="bio-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M2 12h20"/>
+          <path d="M12 2a15 15 0 010 20"/>
+          <path d="M12 2a15 15 0 000 20"/>
+        </svg>
+      </div>
+
+      <div class="bio-text">
+        <strong>Server 4</strong>
+        <span>Alternative Link</span>
+      </div>
+
+    </div>
+
+    <div class="bio-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </div>
+  </a>
+
+</div>
+  <style>
+.server-heading{
+    max-width:720px;
+    margin:0 auto 28px;
+    text-align:center;
+}
+
+.server-label{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 14px;
+    border-radius:999px;
+    background:rgba(37,99,235,.12);
+    border:1px solid rgba(59,130,246,.25);
+    color:#60a5fa;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+}
+
+.server-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#22c55e;
+    box-shadow:0 0 12px #22c55e;
+    animation:pulse 1.8s infinite;
+}
+
+.server-heading h2{
+    margin:18px 0 10px;
+    font-size:34px;
+    font-weight:800;
+    line-height:1.2;
+    color:#000;
+    letter-spacing:-.6px;
+}
+
+.server-heading p{
+    margin:0 auto;
+    max-width:620px;
+    color:#94a3b8;
+    font-size:16px;
+    line-height:1.8;
+}
+
+@keyframes pulse{
+    0%,100%{transform:scale(1);opacity:1;}
+    50%{transform:scale(1.4);opacity:.5;}
+}
+
+@media(max-width:768px){
+
+.server-heading h2{
+    font-size:26px;
+}
+
+.server-heading p{
+    font-size:14px;
+    line-height:1.7;
+}
+
+}
+/* =========================
+   TV BUTTONS PRO
+========================= */
+
+.bio-links{
+    width:100%;
+    max-width:700px;
+    margin:24px auto;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.bio-btn{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:16px 18px;
+    text-decoration:none;
+    color:#fff;
+    background:#111827;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    transition:.25s;
+    box-shadow:0 8px 24px rgba(0,0,0,.12);
+}
+
+.bio-btn:hover{
+    transform:translateY(-2px);
+    border-color:#38bdf8;
+    box-shadow:0 12px 28px rgba(14,165,233,.18);
+}
+
+.bio-btn-left{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex:1;
+    min-width:0;
+}
+
+.bio-icon{
+    width:52px;
+    height:52px;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:16px;
+    background:linear-gradient(135deg,#0ea5e9,#2563eb);
+}
+
+.bio-icon svg{
+    width:26px;
+    height:26px;
+    color:#fff;
+}
+
+.bio-text{
+    flex:1;
+    min-width:0;
+}
+
+.bio-text strong{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:16px;
+    font-weight:700;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.bio-text strong::before{
+    content:"";
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#22c55e;
+    box-shadow:0 0 8px #22c55e;
+    flex-shrink:0;
+}
+
+.bio-text span{
+    display:block;
+    margin-top:5px;
+    font-size:13px;
+    color:#94a3b8;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.bio-arrow{
+    width:42px;
+    height:42px;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:rgba(255,255,255,.06);
+    transition:.25s;
+}
+
+.bio-arrow svg{
+    width:18px;
+    height:18px;
+    color:#fff;
+}
+
+.bio-btn:hover .bio-arrow{
+    background:#0ea5e9;
+    transform:translateX(3px);
+}
+
+/* Tablet */
+
+@media(max-width:768px){
+
+.bio-links{
+    gap:12px;
+}
+
+.bio-btn{
+    padding:15px;
+}
+
+.bio-icon{
+    width:48px;
+    height:48px;
+}
+
+.bio-icon svg{
+    width:24px;
+    height:24px;
+}
+
+.bio-text strong{
+    font-size:15px;
+}
+
+.bio-text span{
+    font-size:12px;
+}
+
+.bio-arrow{
+    width:40px;
+    height:40px;
+}
+
+}
+
+/* Mobile */
+
+@media(max-width:480px){
+
+.bio-btn{
+    padding:14px;
+    gap:12px;
+}
+
+.bio-btn-left{
+    gap:12px;
+}
+
+.bio-icon{
+    width:44px;
+    height:44px;
+}
+
+.bio-icon svg{
+    width:22px;
+    height:22px;
+}
+
+.bio-text strong{
+    font-size:14px;
+}
+
+.bio-text span{
+    font-size:11px;
+}
+
+.bio-arrow{
+    width:36px;
+    height:36px;
+}
+
+.bio-arrow svg{
+    width:16px;
+    height:16px;
+}
+
+}
+
+/* Small Phone */
+
+@media(max-width:360px){
+
+.bio-btn{
+    padding:12px;
+}
+
+.bio-icon{
+    width:40px;
+    height:40px;
+}
+
+.bio-text strong{
+    font-size:13px;
+}
+
+.bio-text span{
+    font-size:10px;
+}
+
+.bio-arrow{
+    width:34px;
+    height:34px;
+}
+
+}
+  .post-body .bio-btn{
+    display:flex !important;
+    width:100%;
+    max-width:none;
+    align-items:center;
+    justify-content:space-between;
+    text-decoration:none;
+    box-sizing:border-box;
+}
+</style>
+ <!-- <iframe id='score808frame' title="score808 app" loading="lazy" scrolling='no' src='https://official.tigoals.my.id/p/livescore-today.html' style='width: 100%; border: none;'></iframe>-->
+  <!-- DISCLAIMER -->
+  <div class="tg-disclaimer">
+    Sumber data berasal dari pihak ketiga.
+  </div>
+<div id='histats_counter'/>
+</div>
+	<!--<script>//<![CDATA[ 
+window.addEventListener("message", function(e) {
+    if (e.origin !== "https://official.tigoals.my.id") return;
+    const iframe = document.getElementById("score808frame");
+    if (e.data && e.data.height) {
+      iframe.style.height = e.data.height + "px";
+    }
+  });
+  //]]> </script>-->
+<script>
+(function(){
+
+  const $ = id => document.getElementById(id);
+
+  const safeDecode = str=>{
+    try{
+      return decodeURIComponent(atob(str));
+    }catch{
+      return null;
+    }
+  };
+
+  const urlParam = new URLSearchParams(location.search);
+
+  const encoded = urlParam.get("url");
+  const title = urlParam.get("title");
+
+  if(title){
+    $("tg-title").textContent = title;
+    document.title = title + " - Live Score";
+  }
+
+  if(!encoded){
+    $("tg-loader").innerHTML = "Data tidak tersedia";
+    return;
+  }
+
+  const decodedURL = safeDecode(encoded);
+
+  if(!decodedURL || !decodedURL.startsWith("http")){
+    $("tg-loader").innerHTML = "URL tidak valid";
+    return;
+  }
+
+  const iframe = $("tg-frame");
+  const loader = $("tg-loader");
+
+  iframe.src = decodedURL;
+
+  iframe.onload = ()=>{
+    iframe.classList.add("show");
+    loader.style.opacity="0";
+
+    setTimeout(()=>{
+      loader.remove();
+    },300);
+  };
+
+})();
+</script>
+
+<!-- SEO SCHEMA -->
+<script type="application/ld+json">
+{
+ "@context":"https://schema.org",
+ "@type":"WebPage",
+ "name":"Live Score Sepak Bola Hari Ini",
+ "description":"Pantau skor dan statistik pertandingan sepak bola real-time.",
+ "inLanguage":"id"
+}
+</script>
+<script type="text/javascript">
+//<![CDATA[
+ var _Hasync=_Hasync||[];_Hasync.push(['Histats.start','1,4858913,4,601,110,30,00000100']);_Hasync.push(['Histats.fasi','1']);_Hasync.push(['Histats.track_hits','']);var LazyHistatsLoaded=!1;function loadHistatsScript(){if(LazyHistatsLoaded)return;LazyHistatsLoaded=!0;var hs=document.createElement('script');hs.type='text/javascript';hs.async=!0;hs.src='https://s10.histats.com/js15_as.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(hs,s)}
+window.addEventListener('scroll',function(){if((document.documentElement.scrollTop!==0||document.body.scrollTop!==0)&&!LazyHistatsLoaded){loadHistatsScript()}},{passive:!0})
+//]]>
+</script>
+
+<noscript>
+  <a href="/" target="_blank">
+    <img class="lazyload" src="https://sstatic1.histats.com/0.gif?4858913&101" alt="hitstat score808" title="trafick score808" border="0">
+  </a>
+</noscript>
+</body>
+</html>
