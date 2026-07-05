@@ -743,10 +743,8 @@ window.addEventListener("message", function(e) {
     $("tg-loader").innerHTML = "URL tidak valid";
     return;
   }
-
   const iframe = $("tg-frame");
   const loader = $("tg-loader");
-
   iframe.src = decodedURL;
 
   iframe.onload = ()=>{
@@ -760,7 +758,6 @@ window.addEventListener("message", function(e) {
 
 })();
 </script>
-
 <!-- SEO SCHEMA -->
 <script type="application/ld+json">
 {
