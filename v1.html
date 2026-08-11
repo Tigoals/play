@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+  >
+
+  <title>Live Player</title>
+
+  <meta name="description" content="Live Player untuk menyaksikan pertandingan sepak bola secara online.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+
+  <link rel="canonical" href="https://play.beritanasional.eu.org/v1">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/dudungelo/beritanasional@main/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhD2892oAxi2JqOozahWbXAx1WajRvg2TUqajaBX1WPa3PomJpzXaVoHR9PBCNcpVFoo45ATqQ1bP32zcGI1aOkYba1bpyZJxllYgsXY1w_gBzfxeb5mK0Y7qfFqiBt-7ZaNp1M5kxFXs6xJa5QUZqGNzSHkLQcMZCYvvytcNoCd7d722sPWwdkin6NCDs/s180/livescore%20808.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="video.other">
+  <meta property="og:title" content="Live Player">
+  <meta property="og:description" content="Saksikan pertandingan sepak bola secara online melalui Live Player.">
+  <meta property="og:url" content="https://play.beritanasional.eu.org/v1">
+  <meta property="og:image" content="https://example.com/images/live-player.webp">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      background: #05070b;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .player-header {
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 0 16px;
+
+      background: #0b0f17;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .brand-dot {
+      width: 9px;
+      height: 9px;
+
+      border-radius: 50%;
+      background: #ff1744;
+
+      box-shadow: 0 0 12px rgba(255,23,68,.8);
+    }
+
+    .live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+
+      padding: 5px 9px;
+
+      border-radius: 6px;
+
+      background: rgba(255,23,68,.12);
+      color: #ff4d6d;
+
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .5px;
+    }
+
+    /* PLAYER AREA */
+    .player-wrap {
+      width: 100%;
+      max-width: 1100px;
+
+      margin: auto;
+      padding: 16px;
+    }
+
+    .player {
+      position: relative;
+
+      width: 100%;
+      aspect-ratio: 16 / 9;
+
+      overflow: hidden;
+
+      background: #000;
+
+      border-radius: 12px;
+
+      box-shadow:
+        0 20px 60px rgba(0,0,0,.45),
+        0 0 0 1px rgba(255,255,255,.06);
+    }
+
+    .player iframe {
+      position: absolute;
+
+      inset: 0;
+
+      width: 100%;
+      height: 100%;
+
+      border: 0;
+
+      background: #000;
+    }
+
+    /* LOADING */
+    .loading {
+      position: absolute;
+
+      inset: 0;
+
+      z-index: 2;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #05070b;
+    }
+
+    .loader {
+      width: 38px;
+      height: 38px;
+
+      border: 3px solid rgba(255,255,255,.15);
+      border-top-color: #fff;
+
+      border-radius: 50%;
+
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ERROR */
+    .error {
+      display: none;
+
+      position: absolute;
+      inset: 0;
+
+      z-index: 3;
+
+      align-items: center;
+      justify-content: center;
+
+      flex-direction: column;
+
+      gap: 10px;
+
+      background: #05070b;
+
+      text-align: center;
+
+      padding: 20px;
+    }
+
+    .error svg {
+      width: 42px;
+      height: 42px;
+      opacity: .7;
+    }
+
+    .error-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .error-text {
+      max-width: 450px;
+
+      color: #8992a3;
+
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* INFO */
+    .player-info {
+      margin-top: 14px;
+
+      padding: 14px 16px;
+
+      background: #0b0f17;
+
+      border: 1px solid rgba(255,255,255,.06);
+
+      border-radius: 10px;
+    }
+
+    .player-title {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .player-subtitle {
+      margin-top: 5px;
+
+      color: #7f899a;
+
+      font-size: 12px;
+    }
+
+    /* MOBILE */
+    @media (max-width: 600px) {
+
+      .player-header {
+        height: 48px;
+        padding: 0 12px;
+      }
+
+      .player-wrap {
+        padding: 8px;
+      }
+
+      .player {
+        border-radius: 8px;
+      }
+
+      .player-info {
+        margin-top: 8px;
+      }
+
+    }
+
+    /* FULLSCREEN */
+    .fullscreen-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+
+      padding: 7px 10px;
+
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 7px;
+
+      background: rgba(255,255,255,.04);
+
+      color: #fff;
+
+      font-size: 11px;
+      font-weight: 600;
+
+      cursor: pointer;
+    }
+
+    .fullscreen-btn:hover {
+      background: rgba(255,255,255,.08);
+    }
+/* =========================================
+   PRO YOUTUBE CHANNEL BAR
+========================================= */
+
+.channel-bar {
+  width: 100%;
+  max-width: 1100px;
+
+  margin: 10px auto 0;
+  padding: 12px 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(20,25,35,.98),
+      rgba(11,15,23,.98)
+    );
+
+  border: 1px solid rgba(255,255,255,.07);
+
+  border-radius: 11px;
+
+  box-shadow:
+    0 8px 30px rgba(0,0,0,.22);
+
+  position: relative;
+  overflow: hidden;
+}
+
+
+/* subtle top highlight */
+
+.channel-bar::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  top: 0;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.14),
+      transparent
+    );
+
+  pointer-events: none;
+}
+
+
+/* =========================================
+   CHANNEL LEFT
+========================================= */
+
+.channel-left {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+}
+
+
+.channel-avatar {
+  width: 44px;
+  height: 44px;
+
+  flex: 0 0 44px;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  background: #171c26;
+
+  border: 2px solid rgba(255,255,255,.08);
+
+  box-shadow:
+    0 3px 12px rgba(0,0,0,.35);
+}
+
+
+.channel-avatar img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+
+.channel-details {
+  min-width: 0;
+}
+
+
+.channel-name {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  color: #fff;
+
+  font-size: 14px;
+  line-height: 18px;
+
+  font-weight: 750;
+
+  white-space: nowrap;
+}
+
+
+.verified-icon {
+  width: 15px;
+  height: 15px;
+
+  color: #3ea6ff;
+
+  flex: 0 0 15px;
+}
+
+
+.channel-meta {
+  margin-top: 3px;
+
+  color: #7f8999;
+
+  font-size: 10.5px;
+  line-height: 15px;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================
+   SUBSCRIBE RIGHT
+========================================= */
+
+.subscribe-btn {
+  flex: 0 0 auto;
+
+  height: 38px;
+
+  padding: 0 17px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  border-radius: 7px;
+
+  background: #ff0033;
+
+  color: #fff !important;
+
+  text-decoration: none !important;
+
+  font-size: 12px;
+  font-weight: 750;
+
+  letter-spacing: .1px;
+
+  box-shadow:
+    0 4px 14px rgba(255,0,51,.18);
+
+  transition:
+    background .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+
+.subscribe-btn svg {
+  width: 17px;
+  height: 17px;
+
+  flex: 0 0 17px;
+}
+
+
+.subscribe-btn:hover {
+  background: #e6002e;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 7px 20px rgba(255,0,51,.28);
+}
+
+
+.subscribe-btn:active {
+  transform: scale(.96);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+  .channel-bar {
+    margin-top: 8px;
+
+    padding: 10px 11px;
+
+    gap: 10px;
+
+    border-radius: 9px;
+  }
+
+
+  .channel-left {
+    gap: 9px;
+  }
+
+
+  .channel-avatar {
+    width: 38px;
+    height: 38px;
+
+    flex-basis: 38px;
+  }
+
+
+  .channel-name {
+    font-size: 13px;
+  }
+
+
+  .channel-meta {
+    max-width: 155px;
+
+    font-size: 9.5px;
+  }
+
+
+  .subscribe-btn {
+    height: 34px;
+
+    padding: 0 12px;
+
+    gap: 5px;
+
+    font-size: 11px;
+
+    border-radius: 6px;
+  }
+
+
+  .subscribe-btn svg {
+    width: 15px;
+    height: 15px;
+
+    flex-basis: 15px;
+  }
+
+}
+/* =========================================
+   PLAYER ACTIONS
+========================================= */
+
+.player-actions {
+  width: 100%;
+  max-width: 1100px;
+
+  margin: 10px auto 0;
+
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 8px;
+}
+
+
+/* BASE BUTTON */
+
+.player-action {
+  min-width: 0;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 10px;
+
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 9px;
+
+  background: #10151e;
+  color: #fff !important;
+
+  text-decoration: none !important;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform .2s ease,
+    background .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+
+.player-action svg {
+  width: 18px;
+  height: 18px;
+
+  flex: 0 0 18px;
+}
+
+
+.player-action:hover {
+  transform: translateY(-1px);
+
+  background: #171d28;
+
+  border-color:
+    rgba(255,255,255,.14);
+
+  box-shadow:
+    0 5px 18px rgba(0,0,0,.22);
+}
+
+
+.player-action:active {
+  transform: scale(.97);
+}
+
+
+/* =========================================
+   YOUTUBE
+========================================= */
+
+.youtube-action {
+  background:
+    linear-gradient(
+      135deg,
+      #ff0033,
+      #d9002b
+    );
+
+  border-color:
+    rgba(255,0,51,.3);
+
+  box-shadow:
+    0 4px 15px rgba(255,0,51,.15);
+}
+
+.youtube-action:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #ff1744,
+      #e6002e
+    );
+}
+
+
+/* =========================================
+   SERVER
+========================================= */
+
+.server-action {
+  color: #dbe7ff !important;
+}
+
+.server-action svg {
+  color: #60a5fa;
+}
+
+
+/* =========================================
+   TELEGRAM
+========================================= */
+
+.telegram-action {
+  color: #dff5ff !important;
+}
+
+.telegram-action svg {
+  color: #29a9ea;
+}
+
+
+/* =========================================
+   WHATSAPP
+========================================= */
+
+.whatsapp-action {
+  color: #e5fff0 !important;
+}
+
+.whatsapp-action svg {
+  color: #25d366;
+}
+
+
+/* =========================================
+   SERVER PANEL
+========================================= */
+
+.server-panel {
+  width: 100%;
+  max-width: 1100px;
+
+  margin: 8px auto 0;
+
+  padding: 12px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #111722,
+      #0b1018
+    );
+
+  border: 1px solid rgba(255,255,255,.08);
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.25);
+
+  animation:
+    serverPanelIn .2s ease;
+}
+
+.server-panel[hidden] {
+  display: none;
+}
+
+@keyframes serverPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* PANEL HEADER */
+
+.server-panel-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 10px;
+
+  color: #fff;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.server-panel-title button {
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: 7px;
+
+  background: rgba(255,255,255,.06);
+
+  color: #9ca6b7;
+
+  cursor: pointer;
+}
+
+.server-panel-title button:hover {
+  background: rgba(255,255,255,.1);
+  color: #fff;
+}
+
+.server-panel-title button svg {
+  width: 15px;
+  height: 15px;
+}
+
+
+/* SERVER LIST */
+
+.server-list {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px;
+}
+
+
+/* SERVER BUTTON DARI JS */
+
+.server-list a,
+.server-list button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 85px;
+  height: 36px;
+
+  padding: 0 13px;
+
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 7px;
+
+  background: #181f2b;
+
+  color: #fff;
+
+  font-family: inherit;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition: .2s ease;
+}
+
+.server-list a:hover,
+.server-list button:hover {
+  background: #2563eb;
+
+  border-color: #3b82f6;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+  .player-actions {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 7px;
+  }
+
+  .player-action {
+    height: 40px;
+
+    font-size: 10.5px;
+  }
+
+}
+
+
+@media (max-width: 380px) {
+
+  .player-actions {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .player-action {
+    gap: 5px;
+
+    padding: 0 6px;
+
+    font-size: 10px;
+  }
+
+  .player-action svg {
+    width: 16px;
+    height: 16px;
+
+    flex-basis: 16px;
+  }
+
+}
+
+  </style>
+  <style>
+/* =================================
+   STICKY CONTAINER
+================================= */
+
+.viral-sticky{
+  position:fixed;
+  left:16px;
+  right:16px;
+  bottom:18px;
+  z-index:9998;
+  display:flex;
+  justify-content:center;
+  pointer-events:none;
+}
+
+
+/* =================================
+   STICKY BUTTON
+================================= */
+
+.viral-btn{
+  pointer-events:auto;
+  position:relative;
+
+  display:flex;
+  align-items:center;
+  gap:14px;
+
+  width:min(520px,100%);
+  padding:16px 18px;
+
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:22px;
+
+  color:#fff;
+  background:rgba(20,20,20,.92);
+
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+
+  box-shadow:
+    0 12px 40px rgba(0,0,0,.35),
+    0 0 0 1px rgba(255,255,255,.02);
+
+  cursor:pointer;
+  text-align:left;
+
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
+  
+  overflow:visible;
+}
+
+
+/* SHINE */
+
+.viral-btn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  border-radius:22px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.15),
+      transparent
+    );
+
+  transform:translateX(-120%);
+  animation:viralShine 3.5s infinite;
+
+  pointer-events:none;
+}
+
+@keyframes viralShine{
+  100%{
+    transform:translateX(140%);
+  }
+}
+
+
+/* HOVER */
+
+.viral-btn:hover{
+  transform:translateY(-4px);
+
+  box-shadow:
+    0 18px 50px rgba(0,0,0,.45),
+    0 0 30px rgba(255,59,48,.08);
+}
+
+
+/* =================================
+   HOT BADGE
+================================= */
+
+.viral-badge{
+  position:absolute;
+
+  top:-17px;
+  right:18px;
+
+  padding:5px 10px;
+
+  border-radius:999px;
+
+  background:#ff3b30;
+  color:#fff;
+
+  font-size:11px;
+  font-weight:800;
+
+  letter-spacing:.5px;
+
+  box-shadow:
+    0 0 16px rgba(255,59,48,.5);
+
+  animation:badgePulse 1.8s infinite;
+}
+
+@keyframes badgePulse{
+  0%,100%{
+    transform:scale(1);
+  }
+
+  50%{
+    transform:scale(1.06);
+  }
+}
+
+
+/* =================================
+   ICON
+================================= */
+
+.viral-icon{
+  width:52px;
+  height:52px;
+
+  border-radius:16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff3b30,
+      #ff9500
+    );
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
+
+  box-shadow:
+    0 8px 25px rgba(255,59,48,.25);
+}
+
+.viral-icon svg{
+  width:28px;
+  height:28px;
+}
+
+
+/* =================================
+   CONTENT
+================================= */
+
+.viral-content{
+  flex:1;
+
+  display:flex;
+  flex-direction:column;
+
+  min-width:0;
+}
+
+.viral-content strong{
+  font-size:17px;
+  font-weight:750;
+  line-height:1.2;
+}
+
+.viral-content span{
+  margin-top:4px;
+
+  font-size:13px;
+  color:#d4d4d4;
+
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+
+/* =================================
+   ARROW
+================================= */
+
+.viral-arrow{
+  width:40px;
+  height:40px;
+
+  border-radius:50%;
+
+  background:rgba(255,255,255,.08);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
+
+  transition:.25s;
+}
+
+.viral-arrow svg{
+  width:22px;
+  height:22px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+}
+
+.viral-btn:hover .viral-arrow{
+  transform:translateX(4px);
+  background:#25D366;
+}
+
+
+/* =================================
+   POPUP
+================================= */
+
+.viral-popup{
+  position:fixed;
+  inset:0;
+
+  z-index:10000;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:20px;
+
+  visibility:hidden;
+  opacity:0;
+
+  transition:
+    opacity .3s ease,
+    visibility .3s ease;
+}
+
+.viral-popup.active{
+  visibility:visible;
+  opacity:1;
+}
+
+
+/* =================================
+   BACKDROP
+================================= */
+
+.viral-backdrop{
+  position:absolute;
+  inset:0;
+
+  background:
+    rgba(0,0,0,.72);
+
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+
+
+/* =================================
+   MODAL
+================================= */
+
+.viral-modal{
+  position:relative;
+
+  width:min(440px,100%);
+
+  padding:30px;
+
+  border-radius:28px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #18181b,
+      #0c0c0e
+    );
+
+  border:1px solid rgba(255,255,255,.1);
+
+  box-shadow:
+    0 30px 100px rgba(0,0,0,.6),
+    0 0 60px rgba(255,59,48,.08);
+
+  color:#fff;
+
+  transform:
+    translateY(25px)
+    scale(.94);
+
+  transition:
+    transform .35s cubic-bezier(.2,.8,.2,1);
+}
+
+.viral-popup.active .viral-modal{
+  transform:
+    translateY(0)
+    scale(1);
+}
+
+
+/* =================================
+   CLOSE
+================================= */
+
+.viral-close{
+  position:absolute;
+
+  top:16px;
+  right:16px;
+
+  width:38px;
+  height:38px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border:0;
+  border-radius:50%;
+
+  background:rgba(255,255,255,.08);
+  color:#fff;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.viral-close:hover{
+  background:#ff3b30;
+  transform:rotate(90deg);
+}
+
+.viral-close svg{
+  width:19px;
+  height:19px;
+
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+}
+
+
+/* =================================
+   POPUP ICON
+================================= */
+
+.popup-icon{
+  width:64px;
+  height:64px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  margin-bottom:18px;
+
+  border-radius:20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff3b30,
+      #ff9500
+    );
+
+  box-shadow:
+    0 12px 35px rgba(255,59,48,.25);
+}
+
+.popup-icon svg{
+  width:34px;
+  height:34px;
+}
+
+
+/* =================================
+   LABEL
+================================= */
+
+.popup-label{
+  display:inline-flex;
+
+  padding:6px 10px;
+
+  margin-bottom:10px;
+
+  border-radius:999px;
+
+  background:rgba(255,59,48,.12);
+
+  color:#ff6b61;
+
+  font-size:10px;
+  font-weight:800;
+
+  letter-spacing:.8px;
+}
+
+
+/* =================================
+   TITLE
+================================= */
+
+.viral-modal h2{
+  margin:0;
+
+  font-size:28px;
+  font-weight:800;
+
+  letter-spacing:-.5px;
+}
+
+.viral-modal p{
+  margin:10px 0 22px;
+
+  color:#a1a1aa;
+
+  font-size:14px;
+  line-height:1.65;
+}
+
+
+/* =================================
+   POPUP ITEMS
+================================= */
+
+.popup-items{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+
+  margin-bottom:22px;
+}
+
+.popup-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  padding:12px;
+
+  border-radius:15px;
+
+  background:rgba(255,255,255,.045);
+
+  border:1px solid rgba(255,255,255,.055);
+}
+
+.item-icon{
+  width:38px;
+  height:38px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:11px;
+
+  background:rgba(255,255,255,.07);
+
+  font-size:18px;
+
+  flex-shrink:0;
+}
+
+.popup-item strong{
+  display:block;
+
+  font-size:13px;
+  font-weight:700;
+}
+
+.popup-item small{
+  display:block;
+
+  margin-top:2px;
+
+  font-size:11px;
+
+  color:#888;
+}
+
+
+/* =================================
+   ACTION
+================================= */
+
+.popup-action{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+
+  width:100%;
+
+  padding:14px 18px;
+
+  border-radius:15px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff3b30,
+      #ff6b00
+    );
+
+  color:#fff;
+
+  font-size:14px;
+  font-weight:750;
+
+  text-decoration:none;
+
+  box-shadow:
+    0 10px 30px rgba(255,59,48,.2);
+
+  transition:.25s;
+}
+
+.popup-action:hover{
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 14px 35px rgba(255,59,48,.3);
+}
+
+.popup-action svg{
+  width:18px;
+  height:18px;
+
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+
+/* =================================
+   MOBILE
+================================= */
+
+@media(max-width:480px){
+
+  .viral-sticky{
+    left:10px;
+    right:10px;
+    bottom:12px;
+  }
+
+  .viral-btn{
+    padding:13px;
+    gap:11px;
+    border-radius:18px;
+  }
+
+  .viral-icon{
+    width:46px;
+    height:46px;
+    border-radius:14px;
+  }
+
+  .viral-icon svg{
+    width:25px;
+    height:25px;
+  }
+
+  .viral-content strong{
+    font-size:14px;
+  }
+
+  .viral-content span{
+    font-size:11px;
+  }
+
+  .viral-arrow{
+    width:36px;
+    height:36px;
+  }
+
+  .viral-badge{
+    top:-15px;
+    right:13px;
+    font-size:9px;
+    padding:4px 8px;
+  }
+
+  .viral-modal{
+    padding:24px 20px;
+
+    border-radius:24px;
+  }
+
+  .popup-icon{
+    width:56px;
+    height:56px;
+  }
+
+  .popup-icon svg{
+    width:30px;
+    height:30px;
+  }
+
+  .viral-modal h2{
+    font-size:24px;
+  }
+
+}
+
+
+/* =================================
+   REDUCE MOTION
+================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+  .viral-btn::before,
+  .viral-badge{
+    animation:none;
+  }
+
+  .viral-btn,
+  .viral-modal,
+  .viral-popup{
+    transition:none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+  <header class="player-header">
+
+    <div class="brand">
+      <span class="brand-dot"></span>
+      Live Player
+    </div>
+
+    <div class="live">
+      <span>●</span>
+      LIVE
+    </div>
+
+  </header>
+
+
+  <main class="player-wrap">
+
+    <div class="player" id="player">
+
+      <div class="loading" id="loading">
+        <div class="loader"></div>
+      </div>
+
+      <iframe
+        id="streamPlayer"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+
+      <div class="error" id="error">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 8v4"/>
+          <path d="M12 16h.01"/>
+        </svg>
+
+        <div class="error-title">
+          Player tidak tersedia
+        </div>
+
+        <div class="error-text">
+          URL player tidak ditemukan atau tidak dapat dimuat.
+        </div>
+
+      </div>
+
+    </div>
+<!-- PRO CHANNEL BAR -->
+<div class="channel-bar">
+
+  <!-- LEFT : CHANNEL -->
+  <div class="channel-left">
+
+    <div class="channel-avatar">
+      <img
+        src="https://cdn.jsdelivr.net/gh/score808pages/football808@main/image/livescore%20808.png"
+        alt="Score808"
+      >
+    </div>
+
+    <div class="channel-details">
+
+      <div class="channel-name">
+        Score808
+
+        <svg
+          class="verified-icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            fill="currentColor"
+            d="M12 2l2.1 2.1 3-.3.9 2.9 2.7 1.4-1.1 2.8 1.1 2.8-2.7 1.4-.9 2.9-3-.3L12 22l-2.1-2.1-3 .3-.9-2.9-2.7-1.4 1.1-2.8-1.1-2.8 2.7-1.4.9-2.9 3 .3L12 2z"
+          />
+
+          <path
+            fill="#fff"
+            d="M10.5 15.7L7.4 12.6l1.3-1.3 1.8 1.8 4.8-4.8 1.3 1.3z"
+          />
+        </svg>
+      </div>
+
+      <div class="channel-meta">
+        Live Football • Highlights • Schedule
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- RIGHT : SUBSCRIBE -->
+<a
+  href="https://www.youtube.com/@CandilProStudio"
+  target="_blank"
+  rel="noopener noreferrer"
+  class="subscribe-btn"
+  aria-label="Subscribe Score808 di YouTube"
+>
+  <svg
+    class="youtube-icon"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <rect
+      x="2"
+      y="5"
+      width="20"
+      height="14"
+      rx="4"
+      fill="currentColor"
+    />
+
+    <path
+      d="M10 9l5 3-5 3V9z"
+      fill="#ff0033"
+    />
+  </svg>
+
+  <span>Subscribe</span>
+</a>
+
+</div>
+
+<!-- PRO CHANNEL BAR -->
+<!-- PLAYER ACTIONS -->
+<div class="player-actions">
+
+  <!-- SUBSCRIBE YOUTUBE -->
+<a
+  href="https://www.facebook.com/profile.php?id=61574589075880"
+  target="_blank"
+  rel="noopener noreferrer"
+  class="player-action facebook-action"
+  aria-label="Follow CandilProStudio di Facebook"
+>
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.17 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.96h-1.51c-1.49 0-1.96.93-1.96 1.88v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.17 24 18.1 24 12.07z"
+      fill="currentColor"
+    />
+  </svg>
+
+  <span>Follow</span>
+</a>
+
+
+
+<!-- SERVER LAINNYA -->
+<a
+  href="https://cdn.candil.eu.org/p/idn-score808-pro.html"
+  rel="noopener noreferrer"
+  class="player-action server-action"
+>
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect
+      x="3"
+      y="4"
+      width="18"
+      height="16"
+      rx="3"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+    />
+
+    <path
+      d="M7 8h10M7 12h10M7 16h6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+    />
+
+    <circle
+      cx="17"
+      cy="16"
+      r="2"
+      fill="currentColor"
+    />
+  </svg>
+
+  <span>Server Lainnya</span>
+</a>
+
+
+  <!-- TELEGRAM -->
+  <a
+    href="https://t.me/score808alternative"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="player-action telegram-action"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M21.8 4.2L18.7 19c-.2 1-0.8 1.2-1.6.8l-4.4-3.3-2.1 2c-.2.2-.4.4-.8.4l.3-4.5 8.2-7.4c.4-.3-.1-.5-.6-.2L7.5 13 3.2 11.7c-.9-.3-.9-.9.2-1.3L20.2 3.8c.8-.3 1.5.2 1.6.4z"
+      />
+    </svg>
+
+    <span>Telegram</span>
+  </a>
+
+
+  <!-- WHATSAPP CHANNEL -->
+  <a
+    href="https://whatsapp.com/channel/0029VbC7N00EQIaqwkJiAv0Y"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="player-action whatsapp-action"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M12 2.2a9.7 9.7 0 0 0-8.4 14.7L2.4 21.8l5.1-1.2A9.8 9.8 0 1 0 12 2.2zm0 17.7a8 8 0 0 1-4.1-1.1l-.3-.2-3 .7.8-2.9-.2-.3a8 8 0 1 1 6.8 3.8zm4.4-5.9c-.2-.1-1.3-.7-1.5-.7-.2-.1-.4-.1-.5.1-.2.2-.6.7-.7.9-.1.2-.3.2-.5.1-1.4-.7-2.3-1.2-3.2-2.7-.2-.3.2-.3.5-1 .1-.2.1-.3 0-.5l-.7-1.6c-.2-.4-.4-.4-.5-.4h-.4c-.2 0-.5.1-.7.3-.8.8-1 1.9-.2 3.1 1 1.8 2.6 3.2 4.6 4 .6.3 1.1.4 1.5.4.5 0 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2z"
+      />
+    </svg>
+
+    <span>WhatsApp Channel</span>
+  </a>
+
+</div>
+
+
+    <div class="player-info">
+
+      <div class="player-title">
+        Live Streaming Player
+      </div>
+
+      <div class="player-subtitle">
+        Gunakan mode fullscreen untuk pengalaman menonton yang lebih nyaman.
+      </div>
+
+    </div>
+<div class="viral-sticky" id="viralSticky">
+  <button class="viral-btn" id="viralOpen" type="button">
+
+    <span class="viral-badge">HOT</span>
+
+    <div class="viral-icon">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M13 3l-1 6h4l-5 12 1-8H8l5-10z"/>
+      </svg>
+    </div>
+
+    <div class="viral-content">
+      <strong>🔥 Info Viral 2026</strong>
+      <span>Breaking news, trending football & live updates</span>
+    </div>
+
+    <div class="viral-arrow">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M9 6l6 6-6 6"/>
+      </svg>
+    </div>
+
+  </button>
+</div>
+
+
+<!-- =========================
+     POPUP OVERLAY
+========================= -->
+<div class="viral-popup" id="viralPopup" aria-hidden="true">
+
+  <div class="viral-backdrop" id="viralClose"></div>
+
+  <div class="viral-modal" role="dialog" aria-modal="true">
+
+    <button class="viral-close" id="viralCloseBtn" type="button" aria-label="Close">
+      <svg viewBox="0 0 24 24">
+        <path d="M6 6l12 12M18 6L6 18"/>
+      </svg>
+    </button>
+
+    <div class="popup-icon">
+      <svg viewBox="0 0 24 24">
+        <path fill="currentColor" d="M13 3l-1 6h4l-5 12 1-8H8l5-10z"/>
+      </svg>
+    </div>
+
+    <span class="popup-label">🔥 TRENDING NOW</span>
+
+    <h2>Info Viral 2026</h2>
+
+    <p>
+      Dapatkan informasi terbaru seputar football,
+      live score, jadwal pertandingan dan berita
+      olahraga yang sedang trending.
+    </p>
+
+    <div class="popup-items">
+
+      <div class="popup-item">
+        <span class="item-icon">⚽</span>
+        <div>
+          <strong>Live Football</strong>
+          <small>Update pertandingan terbaru</small>
+        </div>
+      </div>
+
+      <div class="popup-item">
+        <span class="item-icon">🔥</span>
+        <div>
+          <strong>Trending News</strong>
+          <small>Berita olahraga yang sedang viral</small>
+        </div>
+      </div>
+
+      <div class="popup-item">
+        <span class="item-icon">⚡</span>
+        <div>
+          <strong>Live Updates</strong>
+          <small>Informasi cepat dan terkini</small>
+        </div>
+      </div>
+
+    </div>
+
+    <a href="https://t.co/lG0KxcrGyb" class="popup-action">
+      Lihat Sekarang
+      <svg viewBox="0 0 24 24">
+        <path d="M5 12h13M13 6l6 6-6 6"/>
+      </svg>
+    </a>
+
+  </div>
+</div>
+  </main>
+
+<script>
+(function(){
+
+  const sticky   = document.getElementById('viralSticky');
+  const popup    = document.getElementById('viralPopup');
+
+  const openBtn  = document.getElementById('viralOpen');
+  const closeBtn = document.getElementById('viralCloseBtn');
+  const backdrop = document.getElementById('viralClose');
+
+  /* Sticky disembunyikan saat awal */
+  sticky.style.display = 'none';
+
+
+  function openPopup(){
+
+    popup.classList.add('active');
+    popup.setAttribute('aria-hidden','false');
+
+    document.body.style.overflow = 'hidden';
+
+  }
+
+
+  function closePopup(){
+
+    popup.classList.remove('active');
+    popup.setAttribute('aria-hidden','true');
+
+    document.body.style.overflow = '';
+
+    /* Tampilkan sticky */
+    sticky.style.display = 'flex';
+
+    /* Simpan status selama tab/session aktif */
+    sessionStorage.setItem('viralPopupShown','1');
+
+  }
+
+
+  /* =========================
+     AUTO POPUP
+  ========================= */
+
+  window.addEventListener('load', function(){
+
+    const alreadyShown =
+      sessionStorage.getItem('viralPopupShown');
+
+    if(!alreadyShown){
+
+      setTimeout(function(){
+
+        openPopup();
+
+      }, 1500);
+
+    }else{
+
+      /* Jika sudah pernah ditutup */
+      sticky.style.display = 'flex';
+
+    }
+
+  });
+
+
+  /* =========================
+     STICKY → POPUP
+  ========================= */
+
+  openBtn.addEventListener('click', function(){
+
+    sticky.style.display = 'none';
+
+    openPopup();
+
+  });
+
+
+  /* =========================
+     CLOSE
+  ========================= */
+
+  closeBtn.addEventListener('click', closePopup);
+
+  backdrop.addEventListener('click', closePopup);
+
+
+  /* =========================
+     ESC
+  ========================= */
+
+  document.addEventListener('keydown', function(e){
+
+    if(e.key === 'Escape' && popup.classList.contains('active')){
+
+      closePopup();
+
+    }
+
+  });
+
+})();
+</script>
+  <script>
+    (() => {
+
+      const iframe = document.getElementById('streamPlayer');
+      const loading = document.getElementById('loading');
+      const error = document.getElementById('error');
+
+      const params = new URLSearchParams(
+        window.location.search
+      );
+
+      const playerUrl = params.get('url');
+
+      if (!playerUrl) {
+
+        loading.style.display = 'none';
+        error.style.display = 'flex';
+
+        return;
+      }
+
+      try {
+
+        const decodedUrl = decodeURIComponent(playerUrl);
+
+        if (
+          !decodedUrl.startsWith('http://') &&
+          !decodedUrl.startsWith('https://')
+        ) {
+          throw new Error('Invalid URL');
+        }
+
+        iframe.src = decodedUrl;
+
+        iframe.addEventListener('load', () => {
+          loading.style.display = 'none';
+        });
+
+      } catch (err) {
+
+        loading.style.display = 'none';
+        error.style.display = 'flex';
+
+      }
+
+    })();
+  </script>
+
+</body>
+</html>
